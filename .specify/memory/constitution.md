@@ -12,7 +12,7 @@ para o domínio:
   ASP.NET).
 - `Hozelo.Application`: casos de uso (um use case por operação, exposto por interface),
   validadores e mapeamentos. Depende de Domain, Communication e Exception.
-- `Hozelo.Infrastructure`: EF Core, PostgreSQL, repositórios, Unit of Work, geração/validação
+- `Hozelo.Infrastructure`: EF Core, migrations (FluentMigrator), PostgreSQL, repositórios, Unit of Work, geração/validação
   de tokens e demais integrações externas. Implementa as interfaces do Domain.
 - `Hozelo.Api`: controllers finos, filtros (incluindo filtro global de exceções), configuração
   de DI e autenticação. Controllers MUST NOT conter regra de negócio; apenas delegam ao use case.
@@ -90,8 +90,13 @@ antecipada atrasa valor real.
 ## Stack e Restrições Técnicas
 
 - **Runtime**: .NET 10 (`net10.0`), ASP.NET Core Web API REST com controllers.
-- **Banco de dados**: PostgreSQL, acessado via Entity Framework Core; esquema versionado por
-  migrations commitadas no repositório.
+- **Banco de dados**: PostgreSQL. Acesso a dados (consultas e persistência) via Entity
+  Framework Core.
+- **Migrations**: esquema versionado exclusivamente com FluentMigrator, seguindo o padrão do
+  MyRecipeBook. Migrations MUST ser classes C# numeradas sequencialmente na Infrastructure,
+  commitadas no repositório e executadas automaticamente na inicialização da API (criando o
+  banco se não existir). EF Core Migrations (`dotnet ef migrations`) MUST NOT ser usadas.
+  Migrations já aplicadas MUST NOT ser alteradas; mudanças de esquema exigem nova migration.
 - **Autenticação**: JWT Bearer.
 - **Validação**: FluentValidation na camada Application.
 - **Testes**: xUnit, com `WebApplicationFactory` para integração.
@@ -124,4 +129,4 @@ antecipada atrasa valor real.
 - Todo plano (`/speckit-plan`) MUST incluir verificação de conformidade com estes princípios;
   violações MUST ser justificadas explicitamente na seção de complexidade do plano.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-20 | **Last Amended**: 2026-11-20
+**Version**: 1.1.0 | **Ratified**: 2026-11-20 | **Last Amended**: 2026-11-20
