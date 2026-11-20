@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Backend/">
+    <Project Path="src/Backend/Hozelo.Api/Hozelo.Api.csproj" />
+    <Project Path="src/Backend/Hozelo.Application/Hozelo.Application.csproj" />
+    <Project Path="src/Backend/Hozelo.Domain/Hozelo.Domain.csproj" />
+    <Project Path="src/Backend/Hozelo.Infrastructure/Hozelo.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/Hozelo.Communication/Hozelo.Communication.csproj" />
+    <Project Path="src/Shared/Hozelo.Exception/Hozelo.Exception.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" />
+    <Project Path="tests/UseCases.Tests/UseCases.Tests.csproj" />
+    <Project Path="tests/Validators.Tests/Validators.Tests.csproj" />
+    <Project Path="tests/WebApi.Tests/WebApi.Tests.csproj" />
+  </Folder>
+</Solution>

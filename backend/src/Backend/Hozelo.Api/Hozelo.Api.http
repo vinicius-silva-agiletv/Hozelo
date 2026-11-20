@@ -1,0 +1,6 @@
+@Hozelo.Api_HostAddress = http://localhost:5193
+
+GET {{Hozelo.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
