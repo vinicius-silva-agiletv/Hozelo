@@ -31,7 +31,7 @@ export function Providers({ children }: { children: ReactNode }) {
           <Toaster richColors position="top-right" />
         </TooltipProvider>
       </SessionProvider>
-      {import.meta.env.DEV && import.meta.env.MODE !== 'test' && <ReactQueryDevtools initialIsOpen={false} />}
+      {import.meta.env.DEV && import.meta.env.MODE !== 'test' && <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />}
     </QueryClientProvider>
   )
 }
