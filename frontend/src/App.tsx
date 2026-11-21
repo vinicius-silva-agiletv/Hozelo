@@ -1,11 +1,5 @@
-import { Route, Routes } from 'react-router'
-
-import { HomePage } from '@/pages/home-page'
+import { AppRoutes } from '@/app/router'
 
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-    </Routes>
-  )
+  return <AppRoutes />
 }
