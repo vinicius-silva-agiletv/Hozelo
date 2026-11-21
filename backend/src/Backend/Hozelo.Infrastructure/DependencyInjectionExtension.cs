@@ -4,6 +4,7 @@ using Hozelo.Domain.Repositories.Category;
 using Hozelo.Domain.Repositories.Expense;
 using Hozelo.Domain.Repositories.Income;
 using Hozelo.Domain.Repositories.Installment;
+using Hozelo.Domain.Repositories.OpeningBalance;
 using Hozelo.Domain.Repositories.Recurrence;
 using Hozelo.Domain.Repositories.LoginThrottle;
 using Hozelo.Domain.Repositories.User;
@@ -95,6 +96,8 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRecurrenceReadOnlyRepository>(sp => sp.GetRequiredService<RecurrenceRepository>());
         services.AddScoped<IRecurrenceWriteOnlyRepository>(sp => sp.GetRequiredService<RecurrenceRepository>());
         services.AddScoped<IRecurrenceUpdateOnlyRepository>(sp => sp.GetRequiredService<RecurrenceRepository>());
+
+        services.AddScoped<IOpeningBalanceRepository, OpeningBalanceRepository>();
     }
 
     private static void AddCalendar(IServiceCollection services, IConfiguration configuration)

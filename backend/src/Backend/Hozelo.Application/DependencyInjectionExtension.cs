@@ -18,6 +18,8 @@ using Hozelo.Application.UseCases.Income.Receive;
 using Hozelo.Application.UseCases.Income.Register;
 using Hozelo.Application.UseCases.Income.Update;
 using Hozelo.Application.UseCases.Installment.GetMonthly;
+using Hozelo.Application.UseCases.OpeningBalance;
+using Hozelo.Application.UseCases.Summary.GetMonthly;
 using Hozelo.Application.UseCases.Recurrence.Delete;
 using Hozelo.Application.UseCases.Recurrence.Get;
 using Hozelo.Application.UseCases.Recurrence.Months;
@@ -83,5 +85,8 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetRecurrencesUseCase, GetRecurrencesUseCase>();
         services.AddScoped<IRecurrencePeriodUseCase, RecurrencePeriodUseCase>();
         services.AddScoped<IRecurrenceMonthUseCase, RecurrenceMonthUseCase>();
+
+        services.AddScoped<IOpeningBalanceUseCase, OpeningBalanceUseCase>();
+        services.AddScoped<IGetMonthlySummaryUseCase, GetMonthlySummaryUseCase>();
     }
 }
