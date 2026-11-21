@@ -4,6 +4,8 @@ using Hozelo.Domain.Repositories.LoginThrottle;
 using Hozelo.Domain.Repositories.User;
 using Hozelo.Domain.Security.Cryptography;
 using Hozelo.Domain.Security.Tokens;
+using Hozelo.Domain.Services.LoggedUser;
+using Hozelo.Infrastructure.Services.LoggedUser;
 using Hozelo.Infrastructure.DataAccess;
 using Hozelo.Infrastructure.DataAccess.Repositories;
 using Hozelo.Infrastructure.Migrations;
@@ -72,6 +74,8 @@ public static class DependencyInjectionExtension
 
         services.AddSingleton(jwtSettings);
         services.AddScoped<IAccessTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IAccessTokenValidator, JwtTokenValidator>();
+        services.AddScoped<ILoggedUser, LoggedUser>();
         services.AddScoped<IPasswordEncripter, BCryptNet>();
     }
 }

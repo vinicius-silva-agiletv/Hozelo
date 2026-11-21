@@ -1,5 +1,6 @@
 using Hozelo.Application.Settings;
 using Hozelo.Application.UseCases.Login.DoLogin;
+using Hozelo.Application.UseCases.User.Profile;
 using Hozelo.Application.UseCases.User.Register;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,5 +27,6 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
         services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
+        services.AddScoped<IGetUserProfileUseCase, GetUserProfileUseCase>();
     }
 }

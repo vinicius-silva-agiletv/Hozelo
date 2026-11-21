@@ -1,5 +1,7 @@
 using Hozelo.Api.Filters;
+using Hozelo.Api.Token;
 using Hozelo.Application;
+using Hozelo.Domain.Security.Tokens;
 using Hozelo.Infrastructure;
 using Hozelo.Infrastructure.Migrations;
 
@@ -15,6 +17,9 @@ builder.Services.AddControllers(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);

@@ -151,19 +151,19 @@ token adulterado, expirado ou de conta inexistente retorna 401 em pt-BR.
 
 ### Tests for User Story 3
 
-- [ ] T045 [P] [US3] Criar `TST/CommonTestUtilities/Services/LoggedUserBuilder.cs` e `TST/CommonTestUtilities/Tokens/JwtTokenGeneratorBuilder.cs` (gera token real com a chave de teste)
-- [ ] T046 [P] [US3] Criar `TST/UseCases.Tests/User/Profile/GetUserProfileUseCaseTest.cs`: devolve nome e e-mail do usuário logado
-- [ ] T047 [P] [US3] Criar `TST/WebApi.Tests/User/Profile/GetUserProfileTest.cs`: 200 sem campos sensíveis; 401 sem token ("É necessário estar autenticado..."); 401 com token adulterado, assinado com outra chave, expirado (avançar `FakeTimeProvider` 7 dias) e de usuário removido ("Sessão inválida ou expirada...")
+- [X] T045 [P] [US3] Criar `TST/CommonTestUtilities/Services/LoggedUserBuilder.cs` e `TST/CommonTestUtilities/Tokens/JwtTokenGeneratorBuilder.cs` (gera token real com a chave de teste)
+- [X] T046 [P] [US3] Criar `TST/UseCases.Tests/User/Profile/GetUserProfileUseCaseTest.cs`: devolve nome e e-mail do usuário logado
+- [X] T047 [P] [US3] Criar `TST/WebApi.Tests/User/Profile/GetUserProfileTest.cs`: 200 sem campos sensíveis; 401 sem token ("É necessário estar autenticado..."); 401 com token adulterado, assinado com outra chave, expirado (avançar `FakeTimeProvider` 7 dias) e de usuário removido ("Sessão inválida ou expirada...")
 
 ### Implementation for User Story 3
 
-- [ ] T048 [P] [US3] Criar `DOM/Security/Tokens/IAccessTokenValidator.cs` (`ValidateAndGetUserIdentifier`) e `DOM/Services/LoggedUser/ILoggedUser.cs` (`User()`)
-- [ ] T049 [P] [US3] Criar `COM/Responses/ResponseUserProfileJson.cs` conforme contracts/api.md
-- [ ] T050 [US3] Criar `INF/Security/Tokens/JwtTokenValidator.cs` (valida assinatura e expiração com `TimeProvider`, sem tolerância de clock) e `INF/Services/LoggedUser/LoggedUser.cs` (lê token via `ITokenProvider`); registrar no DI
-- [ ] T051 [US3] Criar `API/Token/HttpContextTokenValue.cs` implementando `ITokenProvider` (header `Authorization: Bearer`) e registrar `IHttpContextAccessor`
-- [ ] T052 [US3] Criar `API/Filters/AuthenticatedUserFilter.cs` (token ausente → `UnauthorizedException` "É necessário estar autenticado..."; inválido/expirado/conta inexistente ou inativa → "Sessão inválida ou expirada...") e `API/Attributes/AuthenticatedUserAttribute.cs`
-- [ ] T053 [US3] Criar `APP/UseCases/User/Profile/IGetUserProfileUseCase.cs` e `GetUserProfileUseCase.cs` mapeando para `ResponseUserProfileJson`; registrar no DI
-- [ ] T054 [US3] Adicionar `GET /users` com `[AuthenticatedUser]` em `API/Controllers/UsersController.cs`
+- [X] T048 [P] [US3] Criar `DOM/Security/Tokens/IAccessTokenValidator.cs` (`ValidateAndGetUserIdentifier`) e `DOM/Services/LoggedUser/ILoggedUser.cs` (`User()`)
+- [X] T049 [P] [US3] Criar `COM/Responses/ResponseUserProfileJson.cs` conforme contracts/api.md
+- [X] T050 [US3] Criar `INF/Security/Tokens/JwtTokenValidator.cs` (valida assinatura e expiração com `TimeProvider`, sem tolerância de clock) e `INF/Services/LoggedUser/LoggedUser.cs` (lê token via `ITokenProvider`); registrar no DI
+- [X] T051 [US3] Criar `API/Token/HttpContextTokenValue.cs` implementando `ITokenProvider` (header `Authorization: Bearer`) e registrar `IHttpContextAccessor`
+- [X] T052 [US3] Criar `API/Filters/AuthenticatedUserFilter.cs` (token ausente → `UnauthorizedException` "É necessário estar autenticado..."; inválido/expirado/conta inexistente ou inativa → "Sessão inválida ou expirada...") e `API/Attributes/AuthenticatedUserAttribute.cs`
+- [X] T053 [US3] Criar `APP/UseCases/User/Profile/IGetUserProfileUseCase.cs` e `GetUserProfileUseCase.cs` mapeando para `ResponseUserProfileJson`; registrar no DI
+- [X] T054 [US3] Adicionar `GET /users` com `[AuthenticatedUser]` em `API/Controllers/UsersController.cs`
 
 **Checkpoint**: T046–T047 passam; as três histórias funcionam juntas.
 
