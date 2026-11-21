@@ -8,11 +8,13 @@ public sealed class GetCategoriesUseCase(
     ILoggedUser loggedUser,
     ICategoryReadOnlyRepository readOnlyRepository) : IGetCategoriesUseCase
 {
-    public async Task<ResponseCategoriesJson> Execute()
+    public async Task<ResponseCategoriesJson> Execute(string? type = null)
     {
+        var typeFilter = CategoryChecker.ParseType(type);
+
         var user = await loggedUser.User();
 
-        var categories = await readOnlyRepository.GetAll(user.Id);
+        var categories = await readOnlyRepository.GetAll(user.Id, typeFilter);
 
         return new ResponseCategoriesJson
         {
@@ -21,7 +23,8 @@ public sealed class GetCategoriesUseCase(
                 {
                     Id = c.Category.Id,
                     Name = c.Category.Name,
-                    ExpensesCount = c.ExpensesCount
+                    Type = (Communication.Enums.CategoryType)(int)c.Category.Type,
+                    EntriesCount = c.EntriesCount
                 })
                 .ToList()
         };

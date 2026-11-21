@@ -6,7 +6,11 @@ namespace Hozelo.Infrastructure.DataAccess.Repositories;
 
 public sealed class InstallmentRepository(HozeloDbContext dbContext) : IInstallmentReadOnlyRepository
 {
-    public async Task<IList<ExpenseInstallment>> GetByMonth(
+    public Task<IList<ExpenseInstallment>> GetByMonth(
+        long userId, DateOnly monthStart, DateOnly nextMonthStart, long? categoryId) =>
+        GetByRange(userId, monthStart, nextMonthStart, categoryId);
+
+    public async Task<IList<ExpenseInstallment>> GetByRange(
         long userId, DateOnly monthStart, DateOnly nextMonthStart, long? categoryId)
     {
         var query = dbContext.Set<ExpenseInstallment>()

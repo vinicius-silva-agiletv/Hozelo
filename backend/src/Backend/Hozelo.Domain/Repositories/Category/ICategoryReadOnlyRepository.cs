@@ -1,17 +1,20 @@
+using Hozelo.Domain.Enums;
+
 namespace Hozelo.Domain.Repositories.Category;
 
-public sealed record CategoryWithExpensesCount(Entities.Category Category, int ExpensesCount);
+public sealed record CategoryWithEntriesCount(Entities.Category Category, int EntriesCount);
 
 public interface ICategoryReadOnlyRepository
 {
-    /// <summary>Categorias do usuário em ordem alfabética, com a quantidade de despesas.</summary>
-    Task<IList<CategoryWithExpensesCount>> GetAll(long userId);
+    /// <summary>Categorias do usuário em ordem alfabética (opcionalmente de um tipo), com a quantidade de lançamentos.</summary>
+    Task<IList<CategoryWithEntriesCount>> GetAll(long userId, CategoryType? type = null);
 
     /// <summary>Categoria sem rastreamento, ou null se não for do usuário.</summary>
     Task<Entities.Category?> GetById(long userId, long categoryId);
 
-    /// <summary>Compara ignorando maiúsculas/minúsculas; <paramref name="excludingId"/> ignora a própria categoria.</summary>
-    Task<bool> ExistsWithName(long userId, string name, long? excludingId = null);
+    /// <summary>Compara dentro do tipo, ignorando maiúsculas/minúsculas; <paramref name="excludingId"/> ignora a própria categoria.</summary>
+    Task<bool> ExistsWithName(long userId, CategoryType type, string name, long? excludingId = null);
 
-    Task<bool> HasExpenses(long userId, long categoryId);
+    /// <summary>Despesas, receitas ou recorrências vinculadas.</summary>
+    Task<bool> HasEntries(long userId, long categoryId);
 }

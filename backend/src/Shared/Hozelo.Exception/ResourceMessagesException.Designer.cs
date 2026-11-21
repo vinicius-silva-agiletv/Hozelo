@@ -107,4 +107,48 @@ public static class ResourceMessagesException
     public static string EXPENSE_STATUS_INVALID => ResourceManager.GetString("EXPENSE_STATUS_INVALID", Culture)!;
 
     public static string MONTH_INVALID => ResourceManager.GetString("MONTH_INVALID", Culture)!;
+
+    public static string CATEGORY_HAS_ENTRIES => ResourceManager.GetString("CATEGORY_HAS_ENTRIES", Culture)!;
+
+    public static string CATEGORY_TYPE_IMMUTABLE => ResourceManager.GetString("CATEGORY_TYPE_IMMUTABLE", Culture)!;
+
+    public static string CATEGORY_TYPE_INVALID => ResourceManager.GetString("CATEGORY_TYPE_INVALID", Culture)!;
+
+    public static string CATEGORY_REQUIRED => ResourceManager.GetString("CATEGORY_REQUIRED", Culture)!;
+
+    public static string CATEGORY_NOT_INCOME => ResourceManager.GetString("CATEGORY_NOT_INCOME", Culture)!;
+
+    public static string CATEGORY_NOT_EXPENSE => ResourceManager.GetString("CATEGORY_NOT_EXPENSE", Culture)!;
+
+    public static string AMOUNT_TOO_HIGH => ResourceManager.GetString("AMOUNT_TOO_HIGH", Culture)!;
+
+    public static string EXPECTED_DATE_EMPTY => ResourceManager.GetString("EXPECTED_DATE_EMPTY", Culture)!;
+
+    public static string DATE_IN_FUTURE => ResourceManager.GetString("DATE_IN_FUTURE", Culture)!;
+
+    public static string RECURRENCE_KIND_INVALID => ResourceManager.GetString("RECURRENCE_KIND_INVALID", Culture)!;
+
+    public static string DAY_OF_MONTH_INVALID => ResourceManager.GetString("DAY_OF_MONTH_INVALID", Culture)!;
+
+    public static string MONTH_FORMAT_INVALID => ResourceManager.GetString("MONTH_FORMAT_INVALID", Culture)!;
+
+    public static string END_BEFORE_START => ResourceManager.GetString("END_BEFORE_START", Culture)!;
+
+    public static string MONTH_OUT_OF_PERIOD => ResourceManager.GetString("MONTH_OUT_OF_PERIOD", Culture)!;
+
+    public static string UNDO_SETTLEMENT_BEFORE_SKIP => ResourceManager.GetString("UNDO_SETTLEMENT_BEFORE_SKIP", Culture)!;
+
+    public static string MONTH_SKIPPED => ResourceManager.GetString("MONTH_SKIPPED", Culture)!;
+
+    public static string SETTLED_AFTER_END => ResourceManager.GetString("SETTLED_AFTER_END", Culture)!;
+
+    public static string MONTH_ADJUSTMENT_EMPTY => ResourceManager.GetString("MONTH_ADJUSTMENT_EMPTY", Culture)!;
+
+    public static string OPENING_DATE_EMPTY => ResourceManager.GetString("OPENING_DATE_EMPTY", Culture)!;
+
+    public static string OPENING_BALANCE_NOT_FOUND => ResourceManager.GetString("OPENING_BALANCE_NOT_FOUND", Culture)!;
+
+    public static string INCOME_NOT_FOUND => ResourceManager.GetString("INCOME_NOT_FOUND", Culture)!;
+
+    public static string RECURRENCE_NOT_FOUND => ResourceManager.GetString("RECURRENCE_NOT_FOUND", Culture)!;
 }

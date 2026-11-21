@@ -11,7 +11,19 @@ using Hozelo.Application.UseCases.Expense.PayInstallment;
 using Hozelo.Application.UseCases.Expense.Register;
 using Hozelo.Application.UseCases.Expense.UndoInstallmentPayment;
 using Hozelo.Application.UseCases.Expense.Update;
+using Hozelo.Application.UseCases.Income.Delete;
+using Hozelo.Application.UseCases.Income.GetAll;
+using Hozelo.Application.UseCases.Income.GetById;
+using Hozelo.Application.UseCases.Income.Receive;
+using Hozelo.Application.UseCases.Income.Register;
+using Hozelo.Application.UseCases.Income.Update;
 using Hozelo.Application.UseCases.Installment.GetMonthly;
+using Hozelo.Application.UseCases.Recurrence.Delete;
+using Hozelo.Application.UseCases.Recurrence.Get;
+using Hozelo.Application.UseCases.Recurrence.Months;
+using Hozelo.Application.UseCases.Recurrence.Period;
+using Hozelo.Application.UseCases.Recurrence.Register;
+using Hozelo.Application.UseCases.Recurrence.Update;
 using Hozelo.Application.UseCases.Login.DoLogin;
 using Hozelo.Application.UseCases.User.Profile;
 using Hozelo.Application.UseCases.User.Register;
@@ -57,5 +69,19 @@ public static class DependencyInjectionExtension
         services.AddScoped<IAmortizeExpenseUseCase, AmortizeExpenseUseCase>();
 
         services.AddScoped<IGetMonthlyInstallmentsUseCase, GetMonthlyInstallmentsUseCase>();
+
+        services.AddScoped<IRegisterIncomeUseCase, RegisterIncomeUseCase>();
+        services.AddScoped<IUpdateIncomeUseCase, UpdateIncomeUseCase>();
+        services.AddScoped<IDeleteIncomeUseCase, DeleteIncomeUseCase>();
+        services.AddScoped<IGetIncomeByIdUseCase, GetIncomeByIdUseCase>();
+        services.AddScoped<IGetIncomesUseCase, GetIncomesUseCase>();
+        services.AddScoped<IReceiveIncomeUseCase, ReceiveIncomeUseCase>();
+
+        services.AddScoped<IRegisterRecurrenceUseCase, RegisterRecurrenceUseCase>();
+        services.AddScoped<IUpdateRecurrenceUseCase, UpdateRecurrenceUseCase>();
+        services.AddScoped<IDeleteRecurrenceUseCase, DeleteRecurrenceUseCase>();
+        services.AddScoped<IGetRecurrencesUseCase, GetRecurrencesUseCase>();
+        services.AddScoped<IRecurrencePeriodUseCase, RecurrencePeriodUseCase>();
+        services.AddScoped<IRecurrenceMonthUseCase, RecurrenceMonthUseCase>();
     }
 }

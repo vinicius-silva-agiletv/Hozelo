@@ -31,7 +31,7 @@ public class CategoryUseCasesTest
         var result = await Register(repositories).Execute(RequestCategoryJsonBuilder.Build("  Luz  "));
 
         result.Name.ShouldBe("Luz");
-        result.ExpensesCount.ShouldBe(0);
+        result.EntriesCount.ShouldBe(0);
         added!.UserId.ShouldBe(_user.Id);
     }
 
@@ -64,7 +64,7 @@ public class CategoryUseCasesTest
         await Update(repositories).Execute(category.Id, RequestCategoryJsonBuilder.Build("Luz"));
 
         category.Name.ShouldBe("Luz");
-        repositories.ReadOnly.Verify(r => r.ExistsWithName(_user.Id, "Luz", category.Id));
+        repositories.ReadOnly.Verify(r => r.ExistsWithName(_user.Id, Hozelo.Domain.Enums.CategoryType.Expense, "Luz", category.Id));
     }
 
     [Fact]
@@ -101,11 +101,11 @@ public class CategoryUseCasesTest
     public async Task Delete_Error_Has_Expenses()
     {
         var category = CategoryBuilder.Build(userId: _user.Id);
-        var repositories = new CategoryRepositoryBuilder().WithCategory(category).WithExpenses(category.Id);
+        var repositories = new CategoryRepositoryBuilder().WithCategory(category).WithEntries(category.Id);
 
         var act = () => Delete(repositories).Execute(category.Id);
 
-        (await act.ShouldThrowAsync<ConflictException>()).Message.ShouldBe(ResourceMessagesException.CATEGORY_HAS_EXPENSES);
+        (await act.ShouldThrowAsync<ConflictException>()).Message.ShouldBe(ResourceMessagesException.CATEGORY_HAS_ENTRIES);
         repositories.WriteOnly.Verify(r => r.Delete(It.IsAny<Hozelo.Domain.Entities.Category>()), Times.Never);
     }
 
@@ -121,12 +121,52 @@ public class CategoryUseCasesTest
     public async Task GetAll_Maps_Count()
     {
         var repositories = new CategoryRepositoryBuilder().WithAll(
-            new CategoryWithExpensesCount(CategoryBuilder.Build(1, "Água"), 0),
-            new CategoryWithExpensesCount(CategoryBuilder.Build(2, "Carro"), 2));
+            new CategoryWithEntriesCount(CategoryBuilder.Build(1, "Água"), 0),
+            new CategoryWithEntriesCount(CategoryBuilder.Build(2, "Carro"), 2));
 
         var result = await new GetCategoriesUseCase(LoggedUserBuilder.Build(_user), repositories.ReadOnly.Object).Execute();
 
-        result.Categories.Select(c => (c.Name, c.ExpensesCount)).ShouldBe([("Água", 0), ("Carro", 2)]);
+        result.Categories.Select(c => (c.Name, c.EntriesCount)).ShouldBe([("Água", 0), ("Carro", 2)]);
+    }
+
+    [Fact]
+    public async Task Register_Defaults_To_Expense_And_Accepts_Income()
+    {
+        var repositories = new CategoryRepositoryBuilder();
+
+        var expense = await Register(repositories).Execute(RequestCategoryJsonBuilder.Build("Luz"));
+        var income = await Register(repositories).Execute(
+            RequestCategoryJsonBuilder.Build("Salário", Hozelo.Communication.Enums.CategoryType.Income));
+
+        expense.Type.ShouldBe(Hozelo.Communication.Enums.CategoryType.Expense);
+        income.Type.ShouldBe(Hozelo.Communication.Enums.CategoryType.Income);
+    }
+
+    [Fact]
+    public async Task Update_Error_Changing_Type()
+    {
+        var category = CategoryBuilder.Build(userId: _user.Id);
+        var repositories = new CategoryRepositoryBuilder().WithCategory(category);
+
+        var act = () => Update(repositories).Execute(category.Id,
+            RequestCategoryJsonBuilder.Build("Outro", Hozelo.Communication.Enums.CategoryType.Income));
+
+        (await act.ShouldThrowAsync<ErrorOnValidationException>()).GetErrorMessages()
+            .ShouldBe([ResourceMessagesException.CATEGORY_TYPE_IMMUTABLE]);
+    }
+
+    [Fact]
+    public async Task GetAll_Filters_By_Type_And_Rejects_Invalid_Type()
+    {
+        var repositories = new CategoryRepositoryBuilder().WithAll(
+            new CategoryWithEntriesCount(CategoryBuilder.Build(1, "Carro"), 0),
+            new CategoryWithEntriesCount(CategoryBuilder.Build(2, "Salário", type: Hozelo.Domain.Enums.CategoryType.Income), 1));
+        var useCase = new GetCategoriesUseCase(LoggedUserBuilder.Build(_user), repositories.ReadOnly.Object);
+
+        (await useCase.Execute("income")).Categories.Select(c => c.Name).ShouldBe(["Salário"]);
+        var act = () => useCase.Execute("other");
+        (await act.ShouldThrowAsync<ErrorOnValidationException>()).GetErrorMessages()
+            .ShouldBe([ResourceMessagesException.CATEGORY_TYPE_INVALID]);
     }
 
     private RegisterCategoryUseCase Register(CategoryRepositoryBuilder r) => new(

@@ -22,8 +22,11 @@ public sealed class UpdateCategoryUseCase(
 
         CategoryValidator.NormalizeAndValidate(request);
 
+        if (request.Type.HasValue && (int)request.Type.Value != (int)category.Type)
+            throw new ErrorOnValidationException([ResourceMessagesException.CATEGORY_TYPE_IMMUTABLE]);
+
         // Renomear para o próprio nome mudando só maiúsculas é permitido (a própria categoria é ignorada).
-        if (await readOnlyRepository.ExistsWithName(user.Id, request.Name, excludingId: id))
+        if (await readOnlyRepository.ExistsWithName(user.Id, category.Type, request.Name, excludingId: id))
             throw new ConflictException(ResourceMessagesException.CATEGORY_NAME_ALREADY_EXISTS);
 
         category.Name = request.Name;

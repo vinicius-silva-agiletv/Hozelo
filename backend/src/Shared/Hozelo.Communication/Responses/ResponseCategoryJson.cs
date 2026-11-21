@@ -1,3 +1,5 @@
+using Hozelo.Communication.Enums;
+
 namespace Hozelo.Communication.Responses;
 
 public class ResponseCategoryJson
@@ -6,5 +8,8 @@ public class ResponseCategoryJson
 
     public string Name { get; set; } = string.Empty;
 
-    public int ExpensesCount { get; set; }
+    public CategoryType Type { get; set; }
+
+    /// <summary>Despesas, receitas e recorrências da categoria.</summary>
+    public int EntriesCount { get; set; }
 }

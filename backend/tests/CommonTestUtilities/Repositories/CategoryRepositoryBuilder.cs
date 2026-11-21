@@ -1,4 +1,5 @@
 using Hozelo.Domain.Entities;
+using Hozelo.Domain.Enums;
 using Hozelo.Domain.Repositories.Category;
 using Moq;
 
@@ -20,20 +21,21 @@ public class CategoryRepositoryBuilder
 
     public CategoryRepositoryBuilder WithExistingName(string name)
     {
-        ReadOnly.Setup(r => r.ExistsWithName(It.IsAny<long>(), It.Is<string>(n => n.ToLower() == name.ToLower()), It.IsAny<long?>()))
+        ReadOnly.Setup(r => r.ExistsWithName(It.IsAny<long>(), It.IsAny<CategoryType>(), It.Is<string>(n => n.ToLower() == name.ToLower()), It.IsAny<long?>()))
             .ReturnsAsync(true);
         return this;
     }
 
-    public CategoryRepositoryBuilder WithExpenses(long categoryId)
+    public CategoryRepositoryBuilder WithEntries(long categoryId)
     {
-        ReadOnly.Setup(r => r.HasExpenses(It.IsAny<long>(), categoryId)).ReturnsAsync(true);
+        ReadOnly.Setup(r => r.HasEntries(It.IsAny<long>(), categoryId)).ReturnsAsync(true);
         return this;
     }
 
-    public CategoryRepositoryBuilder WithAll(params CategoryWithExpensesCount[] categories)
+    public CategoryRepositoryBuilder WithAll(params CategoryWithEntriesCount[] categories)
     {
-        ReadOnly.Setup(r => r.GetAll(It.IsAny<long>())).ReturnsAsync(categories.ToList());
+        ReadOnly.Setup(r => r.GetAll(It.IsAny<long>(), It.IsAny<CategoryType?>()))
+            .ReturnsAsync((long _, CategoryType? type) => categories.Where(c => type == null || c.Category.Type == type).ToList());
         return this;
     }
 }

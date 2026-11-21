@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using CommonTestUtilities.Requests;
+using Hozelo.Communication.Enums;
 using Hozelo.Communication.Requests;
 using Shouldly;
 
@@ -21,9 +22,9 @@ public abstract class FinanceTestBase(HozeloWebApplicationFactory factory) : Hoz
         return new DateOnly(today.Year, today.Month, 1).AddMonths(monthsFromNow);
     }
 
-    protected async Task<long> CreateCategory(string token, string? name = null)
+    protected async Task<long> CreateCategory(string token, string? name = null, CategoryType? type = null)
     {
-        var response = await DoPost("categories", RequestCategoryJsonBuilder.Build(name), token);
+        var response = await DoPost("categories", RequestCategoryJsonBuilder.Build(name, type), token);
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         return (await ReadJson(response)).GetProperty("id").GetInt64();
     }

@@ -16,5 +16,6 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Active).HasColumnName("active");
         builder.Property(c => c.UserId).HasColumnName("user_id");
         builder.Property(c => c.Name).HasColumnName("name").HasMaxLength(50);
+        builder.Property(c => c.Type).HasColumnName("type").HasConversion<short>();
     }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using CommonTestUtilities.Requests;
+using Hozelo.Communication.Enums;
 using Hozelo.Exception;
 using Shouldly;
 
@@ -23,7 +24,7 @@ public class CategoriesTest(HozeloWebApplicationFactory factory) : FinanceTestBa
         var list = await ReadJson(await DoGet(Method, token));
         Items(list, "categories").Select(c => c.GetProperty("name").GetString())
             .ShouldBe(["água", "Carro da família"]);
-        Items(list, "categories").ShouldAllBe(c => c.GetProperty("expensesCount").GetInt32() == 0);
+        Items(list, "categories").ShouldAllBe(c => c.GetProperty("entriesCount").GetInt32() == 0);
 
         var deleted = await DoDelete($"{Method}/{carro}", token);
         deleted.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -89,9 +90,44 @@ public class CategoriesTest(HozeloWebApplicationFactory factory) : FinanceTestBa
         var response = await DoDelete($"{Method}/{category}", token);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
-        (await ReadErrors(response)).ShouldBe([ResourceMessagesException.CATEGORY_HAS_EXPENSES]);
+        (await ReadErrors(response)).ShouldBe([ResourceMessagesException.CATEGORY_HAS_ENTRIES]);
         Items(await ReadJson(await DoGet(Method, token)), "categories").Single()
-            .GetProperty("expensesCount").GetInt32().ShouldBe(1);
+            .GetProperty("entriesCount").GetInt32().ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task Types_Filter_And_Uniqueness_Per_Type()
+    {
+        var token = await CreateAccountAndGetToken();
+        await CreateCategory(token, "Carro");
+
+        var income = await DoPost(Method, RequestCategoryJsonBuilder.Build("carro", CategoryType.Income), token);
+        var duplicated = await DoPost(Method, RequestCategoryJsonBuilder.Build("CARRO", CategoryType.Income), token);
+
+        income.StatusCode.ShouldBe(HttpStatusCode.Created);
+        (await ReadJson(income)).GetProperty("type").GetString().ShouldBe("Income");
+        duplicated.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+
+        var incomes = await ReadJson(await DoGet($"{Method}?type=Income", token));
+        Items(incomes, "categories").Select(c => c.GetProperty("name").GetString()).ShouldBe(["carro"]);
+        var expenses = await ReadJson(await DoGet($"{Method}?type=Expense", token));
+        Items(expenses, "categories").Single().GetProperty("type").GetString().ShouldBe("Expense");
+
+        var invalid = await DoGet($"{Method}?type=x", token);
+        invalid.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        (await ReadErrors(invalid)).ShouldBe([ResourceMessagesException.CATEGORY_TYPE_INVALID]);
+    }
+
+    [Fact]
+    public async Task Error_Changing_Type()
+    {
+        var token = await CreateAccountAndGetToken();
+        var category = await CreateCategory(token, "Luz");
+
+        var response = await DoPut($"{Method}/{category}", RequestCategoryJsonBuilder.Build("Luz", CategoryType.Income), token);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        (await ReadErrors(response)).ShouldBe([ResourceMessagesException.CATEGORY_TYPE_IMMUTABLE]);
     }
 
     [Fact]

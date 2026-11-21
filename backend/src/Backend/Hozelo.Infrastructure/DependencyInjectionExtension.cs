@@ -2,7 +2,9 @@ using FluentMigrator.Runner;
 using Hozelo.Domain.Repositories;
 using Hozelo.Domain.Repositories.Category;
 using Hozelo.Domain.Repositories.Expense;
+using Hozelo.Domain.Repositories.Income;
 using Hozelo.Domain.Repositories.Installment;
+using Hozelo.Domain.Repositories.Recurrence;
 using Hozelo.Domain.Repositories.LoginThrottle;
 using Hozelo.Domain.Repositories.User;
 using Hozelo.Domain.Security.Cryptography;
@@ -83,6 +85,16 @@ public static class DependencyInjectionExtension
         services.AddScoped<IExpenseUpdateOnlyRepository>(sp => sp.GetRequiredService<ExpenseRepository>());
 
         services.AddScoped<IInstallmentReadOnlyRepository, InstallmentRepository>();
+
+        services.AddScoped<IncomeRepository>();
+        services.AddScoped<IIncomeReadOnlyRepository>(sp => sp.GetRequiredService<IncomeRepository>());
+        services.AddScoped<IIncomeWriteOnlyRepository>(sp => sp.GetRequiredService<IncomeRepository>());
+        services.AddScoped<IIncomeUpdateOnlyRepository>(sp => sp.GetRequiredService<IncomeRepository>());
+
+        services.AddScoped<RecurrenceRepository>();
+        services.AddScoped<IRecurrenceReadOnlyRepository>(sp => sp.GetRequiredService<RecurrenceRepository>());
+        services.AddScoped<IRecurrenceWriteOnlyRepository>(sp => sp.GetRequiredService<RecurrenceRepository>());
+        services.AddScoped<IRecurrenceUpdateOnlyRepository>(sp => sp.GetRequiredService<RecurrenceRepository>());
     }
 
     private static void AddCalendar(IServiceCollection services, IConfiguration configuration)

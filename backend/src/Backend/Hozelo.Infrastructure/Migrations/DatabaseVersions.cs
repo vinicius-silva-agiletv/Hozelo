@@ -7,4 +7,8 @@ public static class DatabaseVersions
     public const long CreateTableCategories = 3;
     public const long CreateTableExpenses = 4;
     public const long CreateTableExpenseInstallments = 5;
+    public const long AddCategoryType = 6;
+    public const long CreateTableIncomes = 7;
+    public const long CreateTablesRecurrences = 8;
+    public const long CreateTableOpeningBalances = 9;
 }

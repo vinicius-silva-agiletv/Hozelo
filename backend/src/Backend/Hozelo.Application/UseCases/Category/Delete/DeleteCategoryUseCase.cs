@@ -20,8 +20,8 @@ public sealed class DeleteCategoryUseCase(
         var category = await updateOnlyRepository.GetById(user.Id, id)
             ?? throw new NotFoundException(ResourceMessagesException.CATEGORY_NOT_FOUND);
 
-        if (await readOnlyRepository.HasExpenses(user.Id, id))
-            throw new ConflictException(ResourceMessagesException.CATEGORY_HAS_EXPENSES);
+        if (await readOnlyRepository.HasEntries(user.Id, id))
+            throw new ConflictException(ResourceMessagesException.CATEGORY_HAS_ENTRIES);
 
         writeOnlyRepository.Delete(category);
 

@@ -15,12 +15,13 @@ namespace Hozelo.Api.Controllers;
 [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status401Unauthorized)]
 public class CategoriesController : ControllerBase
 {
-    /// <summary>Lista as categorias em ordem alfabética, com a quantidade de despesas.</summary>
+    /// <summary>Lista as categorias em ordem alfabética (filtro opcional type=Expense|Income), com a quantidade de lançamentos.</summary>
     [HttpGet]
     [ProducesResponseType(typeof(ResponseCategoriesJson), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll([FromServices] IGetCategoriesUseCase useCase)
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAll([FromServices] IGetCategoriesUseCase useCase, [FromQuery] string? type)
     {
-        return Ok(await useCase.Execute());
+        return Ok(await useCase.Execute(type));
     }
 
     /// <summary>Cria uma categoria.</summary>

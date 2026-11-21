@@ -30,6 +30,15 @@ public class CategoryValidatorTest
     }
 
     [Fact]
+    public void Error_Invalid_Type()
+    {
+        var result = new CategoryValidator().Validate(
+            RequestCategoryJsonBuilder.Build("Luz", (Hozelo.Communication.Enums.CategoryType)9));
+
+        result.Errors.Select(e => e.ErrorMessage).ShouldBe([ResourceMessagesException.CATEGORY_TYPE_INVALID]);
+    }
+
+    [Fact]
     public void Error_Name_Too_Long()
     {
         var result = new CategoryValidator().Validate(RequestCategoryJsonBuilder.Build(new string('a', 51)));
