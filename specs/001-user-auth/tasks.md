@@ -124,19 +124,19 @@ levam a 429 por 15 minutos.
 
 ### Tests for User Story 2
 
-- [ ] T035 [P] [US2] Criar `TST/CommonTestUtilities/Requests/RequestLoginJsonBuilder.cs` e `TST/CommonTestUtilities/Repositories/LoginThrottleRepositoryBuilder.cs`
-- [ ] T036 [P] [US2] Criar `TST/UseCases.Tests/Login/DoLogin/DoLoginUseCaseTest.cs`: sucesso; senha errada e e-mail inexistente lançam `InvalidLoginException` com a mesma mensagem; campos vazios lançam `InvalidLoginException`; bloqueado lança `TooManyLoginAttemptsException` mesmo com senha certa; 5ª falha bloqueia; sucesso zera contagem; tentativa durante bloqueio não estende prazo (usar `FakeTimeProvider`)
-- [ ] T037 [P] [US2] Criar `TST/WebApi.Tests/Login/DoLogin/DoLoginTest.cs`: 200 com token; 401 com mensagem idêntica nos dois casos de falha; 429 após 5 falhas; 200 após avançar o `FakeTimeProvider` em 15 minutos; e-mail com maiúsculas/espaços funciona
+- [X] T035 [P] [US2] Criar `TST/CommonTestUtilities/Requests/RequestLoginJsonBuilder.cs` e `TST/CommonTestUtilities/Repositories/LoginThrottleRepositoryBuilder.cs`
+- [X] T036 [P] [US2] Criar `TST/UseCases.Tests/Login/DoLogin/DoLoginUseCaseTest.cs`: sucesso; senha errada e e-mail inexistente lançam `InvalidLoginException` com a mesma mensagem; campos vazios lançam `InvalidLoginException`; bloqueado lança `TooManyLoginAttemptsException` mesmo com senha certa; 5ª falha bloqueia; sucesso zera contagem; tentativa durante bloqueio não estende prazo (usar `FakeTimeProvider`)
+- [X] T037 [P] [US2] Criar `TST/WebApi.Tests/Login/DoLogin/DoLoginTest.cs`: 200 com token; 401 com mensagem idêntica nos dois casos de falha; 429 após 5 falhas; 200 após avançar o `FakeTimeProvider` em 15 minutos; e-mail com maiúsculas/espaços funciona
 
 ### Implementation for User Story 2
 
-- [ ] T038 [P] [US2] Criar `DOM/Entities/LoginThrottle.cs` com campos de data-model.md `LoginThrottle.Id`, `LoginThrottle.FailedAttempts`, `LoginThrottle.LockedUntilUtc`
-- [ ] T039 [P] [US2] Criar `DOM/Repositories/LoginThrottle/ILoginThrottleRepository.cs` (`Get`, `RegisterFailure(maxAttempts, lockUntil)`, `Reset`)
-- [ ] T040 [P] [US2] Criar `COM/Requests/RequestLoginJson.cs` conforme contracts/api.md
-- [ ] T041 [US2] Criar migration `INF/Migrations/Versions/Version0000002.cs`: tabela `login_throttle` com data-model.md `LoginThrottle.Id` (check `id = 1`), `LoginThrottle.FailedAttempts`, `LoginThrottle.LockedUntilUtc` e linha inicial `(1, 0, null)`
-- [ ] T042 [US2] Criar `INF/DataAccess/Configurations/LoginThrottleConfiguration.cs` e `INF/DataAccess/Repositories/LoginThrottleRepository.cs` com `UPDATE` atômico (incrementa; ao atingir o limite define `locked_until_utc` e zera a contagem) conforme a máquina de estados de data-model.md; registrar no DI (research.md §7)
-- [ ] T043 [US2] Criar `APP/UseCases/Login/DoLogin/IDoLoginUseCase.cs` e `DoLoginUseCase.cs`: verifica bloqueio (429), normaliza e-mail, busca usuário ativo, confere senha, registra falha (401 genérico) ou zera contagem e devolve nome + token; limites de `Settings:LoginLockout` via options; registrar no DI
-- [ ] T044 [US2] Criar `API/Controllers/LoginController.cs` com `POST /login` retornando 200 e documentando 401 e 429
+- [X] T038 [P] [US2] Criar `DOM/Entities/LoginThrottle.cs` com campos de data-model.md `LoginThrottle.Id`, `LoginThrottle.FailedAttempts`, `LoginThrottle.LockedUntilUtc`
+- [X] T039 [P] [US2] Criar `DOM/Repositories/LoginThrottle/ILoginThrottleRepository.cs` (`Get`, `RegisterFailure(maxAttempts, lockUntil)`, `Reset`)
+- [X] T040 [P] [US2] Criar `COM/Requests/RequestLoginJson.cs` conforme contracts/api.md
+- [X] T041 [US2] Criar migration `INF/Migrations/Versions/Version0000002.cs`: tabela `login_throttle` com data-model.md `LoginThrottle.Id` (check `id = 1`), `LoginThrottle.FailedAttempts`, `LoginThrottle.LockedUntilUtc` e linha inicial `(1, 0, null)`
+- [X] T042 [US2] Criar `INF/DataAccess/Configurations/LoginThrottleConfiguration.cs` e `INF/DataAccess/Repositories/LoginThrottleRepository.cs` com `UPDATE` atômico (incrementa; ao atingir o limite define `locked_until_utc` e zera a contagem) conforme a máquina de estados de data-model.md; registrar no DI (research.md §7)
+- [X] T043 [US2] Criar `APP/UseCases/Login/DoLogin/IDoLoginUseCase.cs` e `DoLoginUseCase.cs`: verifica bloqueio (429), normaliza e-mail, busca usuário ativo, confere senha, registra falha (401 genérico) ou zera contagem e devolve nome + token; limites de `Settings:LoginLockout` via options; registrar no DI
+- [X] T044 [US2] Criar `API/Controllers/LoginController.cs` com `POST /login` retornando 200 e documentando 401 e 429
 
 **Checkpoint**: T036–T037 passam; login funciona com conta criada por US1 ou semeada.
 

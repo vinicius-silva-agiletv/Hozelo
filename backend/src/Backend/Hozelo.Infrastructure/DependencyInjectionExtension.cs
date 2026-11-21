@@ -1,5 +1,6 @@
 using FluentMigrator.Runner;
 using Hozelo.Domain.Repositories;
+using Hozelo.Domain.Repositories.LoginThrottle;
 using Hozelo.Domain.Repositories.User;
 using Hozelo.Domain.Security.Cryptography;
 using Hozelo.Domain.Security.Tokens;
@@ -60,6 +61,8 @@ public static class DependencyInjectionExtension
         services.AddScoped<UserRepository>();
         services.AddScoped<IUserReadOnlyRepository>(sp => sp.GetRequiredService<UserRepository>());
         services.AddScoped<IUserWriteOnlyRepository>(sp => sp.GetRequiredService<UserRepository>());
+
+        services.AddScoped<ILoginThrottleRepository, LoginThrottleRepository>();
     }
 
     private static void AddSecurity(IServiceCollection services, IConfiguration configuration)
