@@ -1,6 +1,8 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using CommonTestUtilities.Requests;
 
 namespace WebApi.Tests;
 
@@ -10,6 +12,11 @@ namespace WebApi.Tests;
 [Collection(WebApiCollection.Name)]
 public abstract class HozeloClassFixture(HozeloWebApplicationFactory factory) : IAsyncLifetime
 {
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     private readonly HttpClient _httpClient = factory.CreateClient();
 
     protected HozeloWebApplicationFactory Factory { get; } = factory;
@@ -20,6 +27,34 @@ public abstract class HozeloClassFixture(HozeloWebApplicationFactory factory) : 
 
     protected Task<HttpResponseMessage> DoPost(string url, object request) =>
         _httpClient.PostAsJsonAsync(url, request);
+
+    protected Task<HttpResponseMessage> DoPost(string url, object? request, string token) =>
+        Send(HttpMethod.Post, url, request, token);
+
+    protected Task<HttpResponseMessage> DoPut(string url, object request, string token) =>
+        Send(HttpMethod.Put, url, request, token);
+
+    protected Task<HttpResponseMessage> DoDelete(string url, string token) =>
+        Send(HttpMethod.Delete, url, null, token);
+
+    /// <summary>Cadastra a conta da família e devolve o token de acesso.</summary>
+    protected async Task<string> CreateAccountAndGetToken()
+    {
+        var response = await DoPost("users", RequestRegisterUserJsonBuilder.Build());
+        var json = await ReadJson(response);
+        return json.GetProperty("tokens").GetProperty("accessToken").GetString()!;
+    }
+
+    private Task<HttpResponseMessage> Send(HttpMethod method, string url, object? request, string token)
+    {
+        var message = new HttpRequestMessage(method, url);
+        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        if (request is not null)
+            message.Content = JsonContent.Create(request, options: JsonOptions);
+
+        return _httpClient.SendAsync(message);
+    }
 
     protected Task<HttpResponseMessage> DoGet(string url, string? token = null)
     {

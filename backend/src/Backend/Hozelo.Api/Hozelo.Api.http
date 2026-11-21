@@ -27,3 +27,104 @@ Authorization: Bearer {{login.response.body.$.tokens.accessToken}}
 
 ### 4. Ver o perfil sem token (401)
 GET {{Hozelo.Api_HostAddress}}/users
+
+### ---------------- Feature 002: categorias, despesas e parcelas ----------------
+@token = {{login.response.body.$.tokens.accessToken}}
+
+### 5. Criar categoria (201; repetir com outra caixa dá 409)
+# @name category
+POST {{Hozelo.Api_HostAddress}}/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Carro" }
+
+### 6. Listar categorias (ordem alfabética, com quantidade de despesas)
+GET {{Hozelo.Api_HostAddress}}/categories
+Authorization: Bearer {{token}}
+
+### 7. Renomear categoria (204)
+PUT {{Hozelo.Api_HostAddress}}/categories/{{category.response.body.$.id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Carro da família" }
+
+### 8. Registrar despesa à vista (1 parcela)
+POST {{Hozelo.Api_HostAddress}}/expenses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Conta de água de novembro",
+  "categoryId": {{category.response.body.$.id}},
+  "amountType": "Total",
+  "amount": 120.00,
+  "isInstallment": false,
+  "installmentsCount": 1,
+  "firstDueDate": "2026-12-10"
+}
+
+### 9. Registrar financiamento informando a parcela, com 22 já pagas
+# @name expense
+POST {{Hozelo.Api_HostAddress}}/expenses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Financiamento do carro",
+  "categoryId": {{category.response.body.$.id}},
+  "amountType": "Installment",
+  "amount": 1250.00,
+  "isInstallment": true,
+  "installmentsCount": 48,
+  "firstDueDate": "2025-01-10",
+  "alreadyPaidInstallments": 22,
+  "notes": "Banco X"
+}
+
+### 10. Detalhe com parcelas
+GET {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}
+Authorization: Bearer {{token}}
+
+### 11. Listar despesas (filtros opcionais: categoryId, status=Open|Paid)
+GET {{Hozelo.Api_HostAddress}}/expenses?status=Open
+Authorization: Bearer {{token}}
+
+### 12. Pagar a parcela 23 (corpo opcional: { "paidOn": "yyyy-MM-dd" })
+POST {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}/installments/23/payment
+Authorization: Bearer {{token}}
+
+### 13. Desfazer o pagamento da parcela 23
+DELETE {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}/installments/23/payment
+Authorization: Bearer {{token}}
+
+### 14. Amortizar as 6 últimas parcelas pagando R$ 6.000,00 (desconto de R$ 1.500,00)
+POST {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}/amortizations
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "quantity": 6, "paidAmount": 6000.00 }
+
+### 15. Visão mensal do mês atual (ou ?year=2027&month=1, &categoryId=...)
+GET {{Hozelo.Api_HostAddress}}/installments
+Authorization: Bearer {{token}}
+
+### 16. Editar (mudar quantidade com parcelas amortizadas dá 400)
+PUT {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Financiamento do carro",
+  "categoryId": {{category.response.body.$.id}},
+  "amountType": "Installment",
+  "amount": 1250.00,
+  "isInstallment": true,
+  "installmentsCount": 50,
+  "firstDueDate": "2025-01-10"
+}
+
+### 17. Remover a despesa (204)
+DELETE {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}
+Authorization: Bearer {{token}}

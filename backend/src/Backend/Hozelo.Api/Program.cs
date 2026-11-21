@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Hozelo.Api.Filters;
 using Hozelo.Api.Token;
 using Hozelo.Application;
@@ -15,7 +16,9 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ExceptionFilter>();
     // Campos nulos/ausentes são tratados pelos validadores, com mensagens em português.
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-});
+}).AddJsonOptions(options =>
+    // Enums como texto no JSON ("Total", "Open"...), conforme contracts/api.md.
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
