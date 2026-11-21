@@ -10,6 +10,7 @@ public sealed class UnitOfWork(HozeloDbContext dbContext) : IUnitOfWork
 {
     private const string UniqueViolation = "23505";
     private const string CategoryNameConstraint = "ux_categories_user_type_name";
+    private const string PersonNameConstraint = "ux_people_user_name";
 
     private static readonly string[] SingleAccountConstraints = ["ux_users_single_account", "ux_users_email"];
 
@@ -36,6 +37,14 @@ public sealed class UnitOfWork(HozeloDbContext dbContext) : IUnitOfWork
         {
             // Nome de categoria gravado em paralelo (research.md 002 §8).
             throw new ConflictException(ResourceMessagesException.CATEGORY_NAME_ALREADY_EXISTS);
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException
+        {
+            SqlState: UniqueViolation,
+            ConstraintName: PersonNameConstraint
+        })
+        {
+            throw new ConflictException(ResourceMessagesException.PERSON_NAME_ALREADY_EXISTS);
         }
     }
 }

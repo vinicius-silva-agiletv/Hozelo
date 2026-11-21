@@ -38,5 +38,8 @@ public sealed record LedgerEntry
 
     public bool PaidInAdvance { get; init; }
 
+    /// <summary>Não vira pendência item a item (reembolsos: a pendência é o saldo da pessoa, research.md 004 §9).</summary>
+    public bool PendingExempt { get; init; }
+
     public bool IsSettled => SettledOn.HasValue;
 }

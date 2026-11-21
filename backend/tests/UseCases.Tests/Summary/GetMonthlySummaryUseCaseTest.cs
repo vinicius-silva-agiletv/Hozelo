@@ -20,6 +20,8 @@ public class GetMonthlySummaryUseCaseTest
     private readonly Mock<IIncomeReadOnlyRepository> _incomes = new();
     private readonly Mock<IRecurrenceReadOnlyRepository> _recurrences = new();
     private readonly Mock<IOpeningBalanceRepository> _opening = new();
+    private readonly Mock<Hozelo.Domain.Repositories.Person.IPersonReadOnlyRepository> _people = new();
+    private readonly Mock<Hozelo.Application.UseCases.Person.IPersonLedgerLoader> _ledger = new();
 
     public GetMonthlySummaryUseCaseTest()
     {
@@ -29,6 +31,9 @@ public class GetMonthlySummaryUseCaseTest
             .ReturnsAsync(new List<Hozelo.Domain.Entities.Income>());
         _recurrences.Setup(r => r.GetAll(It.IsAny<long>(), It.IsAny<Hozelo.Domain.Enums.EntryKind?>(), It.IsAny<long?>()))
             .ReturnsAsync(new List<RecurringEntry>());
+        _people.Setup(r => r.GetAll(It.IsAny<long>())).ReturnsAsync(new List<Hozelo.Domain.Entities.Person>());
+        _ledger.Setup(r => r.Load(It.IsAny<long>(), It.IsAny<long?>(), It.IsAny<DateOnly>()))
+            .ReturnsAsync(new Dictionary<long, Hozelo.Application.UseCases.Person.PersonLedger>());
     }
 
     [Fact]
@@ -96,5 +101,5 @@ public class GetMonthlySummaryUseCaseTest
 
     private GetMonthlySummaryUseCase UseCase() => new(
         LoggedUserBuilder.Build(UserBuilder.Build().user), _installments.Object, _incomes.Object, _recurrences.Object,
-        _opening.Object, CalendarBuilder.Build());
+        _opening.Object, _people.Object, _ledger.Object, CalendarBuilder.Build());
 }

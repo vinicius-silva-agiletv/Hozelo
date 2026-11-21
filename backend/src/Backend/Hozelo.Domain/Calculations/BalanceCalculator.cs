@@ -32,16 +32,17 @@ public static class BalanceCalculator
 
     /// <summary>Itens não liquidados de meses encerrados, a partir do saldo inicial.</summary>
     public static IReadOnlyList<LedgerEntry> Pending(IEnumerable<LedgerEntry> entries, OpeningPoint opening, DateOnly currentMonth) =>
-        entries.Where(e => Counts(e, opening) && e.Month < currentMonth && !e.IsSettled)
+        entries.Where(e => Counts(e, opening) && e.Month < currentMonth && !e.IsSettled && !e.PendingExempt)
             .OrderBy(e => e.Date).ThenBy(e => e.Name)
             .ToList();
 
     /// <summary>
     /// Saldo anterior e acumulado ao fim de <paramref name="targetMonth"/>: meses encerrados contam o realizado,
-    /// o mês atual e os futuros contam o previsto, e as pendências entram no mês atual. Null antes do saldo inicial.
+    /// o mês atual e os futuros contam o previsto, e as pendências (mais <paramref name="extraPending"/>, ex.: saldo das
+    /// pessoas) entram no mês atual. Null antes do saldo inicial.
     /// </summary>
     public static AccumulatedBalance? Accumulated(
-        IEnumerable<LedgerEntry> entries, OpeningPoint opening, DateOnly currentMonth, DateOnly targetMonth)
+        IEnumerable<LedgerEntry> entries, OpeningPoint opening, DateOnly currentMonth, DateOnly targetMonth, decimal extraPending = 0m)
     {
         targetMonth = YearMonth.FirstDay(targetMonth);
         currentMonth = YearMonth.FirstDay(currentMonth);
@@ -54,7 +55,8 @@ public static class BalanceCalculator
 
         var pending = Pending(counted, opening, currentMonth);
         var pendingBalance = Sum(pending.Where(e => e.Direction == EntryKind.Income), e => e.Amount)
-            - Sum(pending.Where(e => e.Direction == EntryKind.Expense), e => e.Amount);
+            - Sum(pending.Where(e => e.Direction == EntryKind.Expense), e => e.Amount)
+            + extraPending;
 
         var running = opening.Amount;
         var previous = running;

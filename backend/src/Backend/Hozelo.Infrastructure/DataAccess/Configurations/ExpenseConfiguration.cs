@@ -23,6 +23,9 @@ public sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.Property(e => e.InstallmentsCount).HasColumnName("installments_count");
         builder.Property(e => e.FirstDueDate).HasColumnName("first_due_date");
         builder.Property(e => e.Notes).HasColumnName("notes").HasMaxLength(500);
+        builder.Property(e => e.PersonId).HasColumnName("person_id");
+        builder.Property(e => e.PersonPercent).HasColumnName("person_percent").HasConversion<short?>();
+        builder.HasOne(e => e.Person).WithMany().HasForeignKey(e => e.PersonId).OnDelete(DeleteBehavior.Restrict);
 
         builder.Ignore(e => e.InformedAmount);
 

@@ -28,6 +28,14 @@ public class RecurringEntry : EntityBase
 
     public string? Notes { get; set; }
 
+    /// <summary>Pessoa de quem é esta despesa/conta fixa (feature 004); null = só da família.</summary>
+    public long? PersonId { get; set; }
+
+    /// <summary>Parte da pessoa (1–100); null quando não há pessoa.</summary>
+    public int? PersonPercent { get; set; }
+
+    public Person? Person { get; set; }
+
     public IList<RecurringEntryAmount> Amounts { get; set; } = [];
 
     public IList<RecurringEntryMonth> Months { get; set; } = [];

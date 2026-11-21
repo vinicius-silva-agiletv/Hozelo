@@ -15,6 +15,7 @@ public sealed class ExpenseRepository(HozeloDbContext dbContext)
         dbContext.Set<Expense>()
             .AsNoTracking()
             .Include(e => e.Category)
+            .Include(e => e.Person)
             .Include(e => e.Installments)
             .FirstOrDefaultAsync(e => e.UserId == userId && e.Id == expenseId);
 
@@ -24,6 +25,7 @@ public sealed class ExpenseRepository(HozeloDbContext dbContext)
             .AsNoTracking()
             .AsSplitQuery()
             .Include(e => e.Category)
+            .Include(e => e.Person)
             .Include(e => e.Installments)
             .Where(e => e.UserId == userId);
 
@@ -32,6 +34,14 @@ public sealed class ExpenseRepository(HozeloDbContext dbContext)
 
         return await query.ToListAsync();
     }
+
+    public async Task<IList<Expense>> GetMarked(long userId, long? personId) =>
+        await dbContext.Set<Expense>()
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(e => e.Installments)
+            .Where(e => e.UserId == userId && e.PersonId != null && (personId == null || e.PersonId == personId))
+            .ToListAsync();
 
     Task<Expense?> IExpenseUpdateOnlyRepository.GetById(long userId, long expenseId) =>
         dbContext.Set<Expense>()

@@ -58,5 +58,7 @@ public static class RecurrenceMapper
         response.IsActive = entry.EndMonth is null || entry.EndMonth.Value >= currentMonth;
         response.CurrentAmount = entry.RuleAmount(reference);
         response.Notes = entry.Notes;
+        response.Person = entry.Person is null ? null : new ResponsePersonSummaryJson { Id = entry.Person.Id, Name = entry.Person.Name };
+        response.PersonPercent = entry.PersonPercent;
     }
 }

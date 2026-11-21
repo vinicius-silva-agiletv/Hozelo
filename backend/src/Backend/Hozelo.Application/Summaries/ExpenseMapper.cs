@@ -59,5 +59,7 @@ public static class ExpenseMapper
         response.RemainingAmount = summary.RemainingAmount;
         response.Status = summary.IsPaid ? ExpenseStatus.Paid : ExpenseStatus.Open;
         response.Notes = expense.Notes;
+        response.Person = expense.Person is null ? null : new ResponsePersonSummaryJson { Id = expense.Person.Id, Name = expense.Person.Name };
+        response.PersonPercent = expense.PersonPercent;
     }
 }

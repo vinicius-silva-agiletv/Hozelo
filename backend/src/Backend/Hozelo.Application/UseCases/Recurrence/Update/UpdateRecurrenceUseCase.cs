@@ -6,6 +6,8 @@ using Hozelo.Domain.Enums;
 using Hozelo.Domain.Repositories;
 using Hozelo.Domain.Repositories.Category;
 using Hozelo.Domain.Repositories.Recurrence;
+using Hozelo.Domain.Repositories.Person;
+using Hozelo.Application.UseCases.Person;
 using Hozelo.Domain.Services.Calendar;
 using Hozelo.Domain.Services.LoggedUser;
 using Hozelo.Exception;
@@ -17,6 +19,7 @@ namespace Hozelo.Application.UseCases.Recurrence.Update;
 public sealed class UpdateRecurrenceUseCase(
     ILoggedUser loggedUser,
     ICategoryReadOnlyRepository categoryRepository,
+    IPersonReadOnlyRepository personRepository,
     IRecurrenceUpdateOnlyRepository updateOnlyRepository,
     IRecurrenceReadOnlyRepository readOnlyRepository,
     IUnitOfWork unitOfWork,
@@ -32,12 +35,18 @@ public sealed class UpdateRecurrenceUseCase(
         UpdateRecurrenceValidator.Normalize(request);
         var errors = new UpdateRecurrenceValidator().Validate(request).Messages();
         await CategoryChecker.Check(categoryRepository, user.Id, request.CategoryId, (CategoryType)(int)entry.Kind, errors);
+        if (request.PersonId is not null && entry.Kind == EntryKind.Income)
+            errors.Add(ResourceMessagesException.RECURRENCE_INCOME_CANNOT_BE_MARKED);
+        else
+            await PersonChecker.Check(personRepository, user.Id, request.PersonId, errors);
         ValidationErrors.ThrowIfAny(errors);
 
         entry.Name = request.Name;
         entry.CategoryId = request.CategoryId;
         entry.DayOfMonth = request.DayOfMonth;
         entry.Notes = request.Notes;
+        entry.PersonId = request.PersonId;
+        entry.PersonPercent = PersonChecker.Percent(request.PersonId, request.PersonPercent);
 
         await unitOfWork.Commit();
 

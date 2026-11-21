@@ -132,6 +132,17 @@ public class BalanceCalculatorTest
     }
 
     [Fact]
+    public void Pending_Exempt_Entries_Use_Extra_Pending_Instead()
+    {
+        var opening = new OpeningPoint(0m, Oct);
+        var charge = In(Oct.AddDays(9), 300m) with { PendingExempt = true, Source = LedgerSource.Reimbursement };
+
+        BalanceCalculator.Pending([charge], opening, Nov).ShouldBeEmpty();
+        BalanceCalculator.Accumulated([charge], opening, Nov, Nov, extraPending: 300m)!.EndBalance.ShouldBe(300m);
+        BalanceCalculator.Accumulated([charge], opening, Nov, Dec, extraPending: 300m)!.PreviousBalance.ShouldBe(300m);
+    }
+
+    [Fact]
     public void Opening_Month_Counts_Only_From_Reference_Date_And_Earlier_Months_Have_No_Accumulated()
     {
         var opening = new OpeningPoint(1000m, Nov.AddDays(14));

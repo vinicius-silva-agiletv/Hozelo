@@ -22,6 +22,9 @@ public sealed class RecurringEntryConfiguration : IEntityTypeConfiguration<Recur
         builder.Property(r => r.StartMonth).HasColumnName("start_month");
         builder.Property(r => r.EndMonth).HasColumnName("end_month");
         builder.Property(r => r.Notes).HasColumnName("notes").HasMaxLength(500);
+        builder.Property(r => r.PersonId).HasColumnName("person_id");
+        builder.Property(r => r.PersonPercent).HasColumnName("person_percent").HasConversion<short?>();
+        builder.HasOne(r => r.Person).WithMany().HasForeignKey(r => r.PersonId).OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(r => r.Category).WithMany().HasForeignKey(r => r.CategoryId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(r => r.Amounts).WithOne().HasForeignKey(a => a.RecurringEntryId).OnDelete(DeleteBehavior.Cascade);
