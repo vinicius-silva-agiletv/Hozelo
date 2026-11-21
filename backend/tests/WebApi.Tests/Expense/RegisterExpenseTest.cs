@@ -109,6 +109,19 @@ public class RegisterExpenseTest(HozeloWebApplicationFactory factory) : FinanceT
     }
 
     [Fact]
+    public async Task Error_Income_Category()
+    {
+        var token = await CreateAccountAndGetToken();
+        var response = await DoPost("categories", RequestCategoryJsonBuilder.Build("Salário", Hozelo.Communication.Enums.CategoryType.Income), token);
+        var category = (await ReadJson(response)).GetProperty("id").GetInt64();
+
+        var expense = await DoPost("expenses", RequestRegisterExpenseJsonBuilder.Build(category), token);
+
+        expense.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        (await ReadErrors(expense)).ShouldBe([ResourceMessagesException.CATEGORY_NOT_EXPENSE]);
+    }
+
+    [Fact]
     public async Task Error_Not_Found_And_Without_Token()
     {
         var token = await CreateAccountAndGetToken();

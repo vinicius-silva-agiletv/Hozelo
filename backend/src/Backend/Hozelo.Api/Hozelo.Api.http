@@ -128,3 +128,99 @@ Content-Type: application/json
 ### 17. Remover a despesa (204)
 DELETE {{Hozelo.Api_HostAddress}}/expenses/{{expense.response.body.$.id}}
 Authorization: Bearer {{token}}
+
+### ---------------- Feature 003: receitas, recorrências e saldo do mês ----------------
+
+### 18. Categoria de receita (type opcional; padrão Expense)
+# @name incomeCategory
+POST {{Hozelo.Api_HostAddress}}/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Salário", "type": "Income" }
+
+### 19. Listar só categorias de receita
+GET {{Hozelo.Api_HostAddress}}/categories?type=Income
+Authorization: Bearer {{token}}
+
+### 20. Receita avulsa (13º), prevista
+# @name income
+POST {{Hozelo.Api_HostAddress}}/incomes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "13º - primeira parcela",
+  "categoryId": {{incomeCategory.response.body.$.id}},
+  "amount": 2500.00,
+  "expectedDate": "2026-11-30"
+}
+
+### 21. Confirmar recebimento (corpo opcional: { "receivedOn": "yyyy-MM-dd" }); DELETE desfaz
+POST {{Hozelo.Api_HostAddress}}/incomes/{{income.response.body.$.id}}/receipt
+Authorization: Bearer {{token}}
+
+### 22. Salário recorrente: R$ 6.000 todo dia 5 desde jan/2026
+# @name salary
+POST {{Hozelo.Api_HostAddress}}/recurrences
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "kind": "Income",
+  "name": "Salário",
+  "categoryId": {{incomeCategory.response.body.$.id}},
+  "amount": 6000.00,
+  "dayOfMonth": 5,
+  "startMonth": "2026-01"
+}
+
+### 23. Ajustar só dezembro/2026 (ou { "skipped": true } para pular); DELETE desfaz
+PUT {{Hozelo.Api_HostAddress}}/recurrences/{{salary.response.body.$.id}}/months/2026/12
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "amount": 5400.00 }
+
+### 24. Confirmar o recebimento de novembro/2026
+POST {{Hozelo.Api_HostAddress}}/recurrences/{{salary.response.body.$.id}}/months/2026/11/settlement
+Authorization: Bearer {{token}}
+
+### 25. Aumento a partir de março/2027
+PUT {{Hozelo.Api_HostAddress}}/recurrences/{{salary.response.body.$.id}}/amount
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "amount": 6600.00, "fromMonth": "2027-03" }
+
+### 26. Encerrar em junho/2027 (DELETE .../end reabre)
+PUT {{Hozelo.Api_HostAddress}}/recurrences/{{salary.response.body.$.id}}/end
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "endMonth": "2027-06" }
+
+### 27. Conta fixa: internet R$ 120 todo dia 15 (categoria de despesa)
+POST {{Hozelo.Api_HostAddress}}/recurrences
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "kind": "Expense",
+  "name": "Internet",
+  "categoryId": {{category.response.body.$.id}},
+  "amount": 120.00,
+  "dayOfMonth": 15,
+  "startMonth": "2026-11"
+}
+
+### 28. Saldo inicial do acumulado
+PUT {{Hozelo.Api_HostAddress}}/opening-balance
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "amount": 3200.00, "referenceDate": "2026-11-01" }
+
+### 29. Resumo do mês atual (ou ?year=2027&month=1; &categoryId=... filtra sem acumulado)
+GET {{Hozelo.Api_HostAddress}}/summaries
+Authorization: Bearer {{token}}

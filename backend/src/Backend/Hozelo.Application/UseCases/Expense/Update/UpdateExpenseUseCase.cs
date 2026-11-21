@@ -1,6 +1,7 @@
 using Hozelo.Application.Validation;
 using Hozelo.Communication.Requests;
 using Hozelo.Communication.Responses;
+using Hozelo.Application.UseCases.Category;
 using Hozelo.Domain.Enums;
 using Hozelo.Domain.Repositories;
 using Hozelo.Domain.Repositories.Category;
@@ -29,8 +30,7 @@ public sealed class UpdateExpenseUseCase(
 
         var errors = new ExpenseValidator().Validate(request).Messages();
 
-        if (request.CategoryId > 0 && await categoryRepository.GetById(user.Id, request.CategoryId) is null)
-            errors.Add(ResourceMessagesException.EXPENSE_CATEGORY_NOT_EXISTS);
+        await CategoryChecker.Check(categoryRepository, user.Id, request.CategoryId, CategoryType.Expense, errors);
 
         ValidationErrors.ThrowIfAny(errors);
 

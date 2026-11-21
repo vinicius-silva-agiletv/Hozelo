@@ -150,4 +150,70 @@
   <data name="MONTH_INVALID" xml:space="preserve">
     <value>Informe um mês válido (1 a 12) e um ano entre 2000 e 2100.</value>
   </data>
+  <data name="CATEGORY_HAS_ENTRIES" xml:space="preserve">
+    <value>Não é possível remover uma categoria que possui lançamentos. Mova ou remova os lançamentos antes.</value>
+  </data>
+  <data name="CATEGORY_TYPE_IMMUTABLE" xml:space="preserve">
+    <value>O tipo da categoria não pode ser alterado.</value>
+  </data>
+  <data name="CATEGORY_TYPE_INVALID" xml:space="preserve">
+    <value>Tipo de categoria inválido. Use Expense ou Income.</value>
+  </data>
+  <data name="CATEGORY_REQUIRED" xml:space="preserve">
+    <value>Informe a categoria.</value>
+  </data>
+  <data name="CATEGORY_NOT_INCOME" xml:space="preserve">
+    <value>A categoria informada não é de receita.</value>
+  </data>
+  <data name="CATEGORY_NOT_EXPENSE" xml:space="preserve">
+    <value>A categoria informada não é de despesa.</value>
+  </data>
+  <data name="AMOUNT_TOO_HIGH" xml:space="preserve">
+    <value>O valor é muito alto.</value>
+  </data>
+  <data name="EXPECTED_DATE_EMPTY" xml:space="preserve">
+    <value>Informe a data prevista de recebimento.</value>
+  </data>
+  <data name="DATE_IN_FUTURE" xml:space="preserve">
+    <value>A data não pode ser futura.</value>
+  </data>
+  <data name="RECURRENCE_KIND_INVALID" xml:space="preserve">
+    <value>Informe se a recorrência é de receita ou de despesa.</value>
+  </data>
+  <data name="DAY_OF_MONTH_INVALID" xml:space="preserve">
+    <value>O dia deve estar entre 1 e 31.</value>
+  </data>
+  <data name="MONTH_FORMAT_INVALID" xml:space="preserve">
+    <value>Informe o mês no formato AAAA-MM.</value>
+  </data>
+  <data name="END_BEFORE_START" xml:space="preserve">
+    <value>O mês final não pode ser anterior ao mês inicial.</value>
+  </data>
+  <data name="MONTH_OUT_OF_PERIOD" xml:space="preserve">
+    <value>O mês informado está fora do período da recorrência.</value>
+  </data>
+  <data name="UNDO_SETTLEMENT_BEFORE_SKIP" xml:space="preserve">
+    <value>Desfaça a confirmação do mês antes de pulá-lo.</value>
+  </data>
+  <data name="MONTH_SKIPPED" xml:space="preserve">
+    <value>Este mês foi pulado; desfaça o pulo antes de confirmar.</value>
+  </data>
+  <data name="SETTLED_AFTER_END" xml:space="preserve">
+    <value>Existem meses confirmados depois do mês final informado.</value>
+  </data>
+  <data name="MONTH_ADJUSTMENT_EMPTY" xml:space="preserve">
+    <value>Informe o novo valor do mês ou marque o mês como pulado.</value>
+  </data>
+  <data name="OPENING_DATE_EMPTY" xml:space="preserve">
+    <value>Informe a data de referência do saldo inicial.</value>
+  </data>
+  <data name="OPENING_BALANCE_NOT_FOUND" xml:space="preserve">
+    <value>Saldo inicial não informado.</value>
+  </data>
+  <data name="INCOME_NOT_FOUND" xml:space="preserve">
+    <value>Receita não encontrada.</value>
+  </data>
+  <data name="RECURRENCE_NOT_FOUND" xml:space="preserve">
+    <value>Recorrência não encontrada.</value>
+  </data>
 </root>

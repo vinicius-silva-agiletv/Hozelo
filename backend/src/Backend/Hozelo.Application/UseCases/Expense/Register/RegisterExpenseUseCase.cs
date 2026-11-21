@@ -2,12 +2,12 @@ using Hozelo.Application.Summaries;
 using Hozelo.Application.Validation;
 using Hozelo.Communication.Requests;
 using Hozelo.Communication.Responses;
+using Hozelo.Application.UseCases.Category;
 using Hozelo.Domain.Enums;
 using Hozelo.Domain.Repositories;
 using Hozelo.Domain.Repositories.Category;
 using Hozelo.Domain.Repositories.Expense;
 using Hozelo.Domain.Services.LoggedUser;
-using Hozelo.Exception;
 
 namespace Hozelo.Application.UseCases.Expense.Register;
 
@@ -26,9 +26,7 @@ public sealed class RegisterExpenseUseCase(
 
         var errors = new RegisterExpenseValidator().Validate(request).Messages();
 
-        var category = request.CategoryId > 0 ? await categoryRepository.GetById(user.Id, request.CategoryId) : null;
-        if (request.CategoryId > 0 && category is null)
-            errors.Add(ResourceMessagesException.EXPENSE_CATEGORY_NOT_EXISTS);
+        var category = await CategoryChecker.Check(categoryRepository, user.Id, request.CategoryId, CategoryType.Expense, errors);
 
         ValidationErrors.ThrowIfAny(errors);
 

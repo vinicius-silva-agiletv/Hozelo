@@ -4,5 +4,5 @@ namespace Hozelo.Application.UseCases.Category.GetAll;
 
 public interface IGetCategoriesUseCase
 {
-    Task<ResponseCategoriesJson> Execute();
+    Task<ResponseCategoriesJson> Execute(string? type = null);
 }

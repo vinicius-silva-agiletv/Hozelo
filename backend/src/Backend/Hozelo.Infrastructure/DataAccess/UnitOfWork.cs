@@ -9,7 +9,7 @@ namespace Hozelo.Infrastructure.DataAccess;
 public sealed class UnitOfWork(HozeloDbContext dbContext) : IUnitOfWork
 {
     private const string UniqueViolation = "23505";
-    private const string CategoryNameConstraint = "ux_categories_user_name";
+    private const string CategoryNameConstraint = "ux_categories_user_type_name";
 
     private static readonly string[] SingleAccountConstraints = ["ux_users_single_account", "ux_users_email"];
 
