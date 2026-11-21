@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NAME_EMPTY" xml:space="preserve">
+    <value>O nome não pode estar vazio.</value>
+  </data>
+  <data name="NAME_TOO_LONG" xml:space="preserve">
+    <value>O nome deve ter no máximo 100 caracteres.</value>
+  </data>
+  <data name="EMAIL_EMPTY" xml:space="preserve">
+    <value>O e-mail não pode estar vazio.</value>
+  </data>
+  <data name="EMAIL_INVALID" xml:space="preserve">
+    <value>O e-mail informado é inválido.</value>
+  </data>
+  <data name="EMAIL_TOO_LONG" xml:space="preserve">
+    <value>O e-mail deve ter no máximo 255 caracteres.</value>
+  </data>
+  <data name="PASSWORD_EMPTY" xml:space="preserve">
+    <value>A senha não pode estar vazia.</value>
+  </data>
+  <data name="PASSWORD_TOO_SHORT" xml:space="preserve">
+    <value>A senha deve ter no mínimo 8 caracteres.</value>
+  </data>
+  <data name="PASSWORD_TOO_LONG" xml:space="preserve">
+    <value>A senha é muito longa.</value>
+  </data>
+  <data name="ACCOUNT_ALREADY_EXISTS" xml:space="preserve">
+    <value>Já existe uma conta cadastrada. Faça login para continuar.</value>
+  </data>
+  <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
+    <value>E-mail e/ou senha inválidos.</value>
+  </data>
+  <data name="TOO_MANY_LOGIN_ATTEMPTS" xml:space="preserve">
+    <value>Muitas tentativas de login. Tente novamente em alguns minutos.</value>
+  </data>
+  <data name="NO_TOKEN" xml:space="preserve">
+    <value>É necessário estar autenticado para acessar este recurso.</value>
+  </data>
+  <data name="INVALID_SESSION" xml:space="preserve">
+    <value>Sessão inválida ou expirada. Faça login novamente.</value>
+  </data>
+  <data name="UNKNOWN_ERROR" xml:space="preserve">
+    <value>Erro desconhecido.</value>
+  </data>
+</root>
