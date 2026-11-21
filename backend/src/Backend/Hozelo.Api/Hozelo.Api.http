@@ -1,6 +1,29 @@
 @Hozelo.Api_HostAddress = http://localhost:5193
 
-GET {{Hozelo.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Cadastrar a conta da família (201; repetir dá 409)
+# @name register
+POST {{Hozelo.Api_HostAddress}}/users
+Content-Type: application/json
 
-###
+{
+  "name": "Família Silva",
+  "email": "familia@exemplo.com",
+  "password": "senha1234"
+}
+
+### 2. Entrar (200; senha errada dá 401; 5 erros seguidos dão 429)
+# @name login
+POST {{Hozelo.Api_HostAddress}}/login
+Content-Type: application/json
+
+{
+  "email": "familia@exemplo.com",
+  "password": "senha1234"
+}
+
+### 3. Ver o perfil com o token do login (200)
+GET {{Hozelo.Api_HostAddress}}/users
+Authorization: Bearer {{login.response.body.$.tokens.accessToken}}
+
+### 4. Ver o perfil sem token (401)
+GET {{Hozelo.Api_HostAddress}}/users

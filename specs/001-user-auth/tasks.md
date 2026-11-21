@@ -171,10 +171,10 @@ token adulterado, expirado ou de conta inexistente retorna 401 em pt-BR.
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T055 [P] Configurar esquema de segurança Bearer no Swagger em `API/Program.cs`
-- [ ] T056 [P] Atualizar `API/Hozelo.Api.http` com os cenários do quickstart.md (cadastro, login, perfil)
-- [ ] T057 Rodar `dotnet build` sem warnings novos e `dotnet test` em `backend/` com todos os testes passando
-- [ ] T058 Executar o roteiro manual de `specs/001-user-auth/quickstart.md` contra o PostgreSQL local e registrar divergências
+- [X] T055 [P] Configurar esquema de segurança Bearer no Swagger em `API/Program.cs`
+- [X] T056 [P] Atualizar `API/Hozelo.Api.http` com os cenários do quickstart.md (cadastro, login, perfil)
+- [X] T057 Rodar `dotnet build` sem warnings novos e `dotnet test` em `backend/` com todos os testes passando
+- [X] T058 Executar o roteiro manual de `specs/001-user-auth/quickstart.md` contra o PostgreSQL local e registrar divergências
 
 ---
 

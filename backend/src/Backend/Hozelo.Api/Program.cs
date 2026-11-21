@@ -4,6 +4,7 @@ using Hozelo.Application;
 using Hozelo.Domain.Security.Tokens;
 using Hozelo.Infrastructure;
 using Hozelo.Infrastructure.Migrations;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,25 @@ builder.Services.AddControllers(options =>
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    const string scheme = "Bearer";
+
+    options.AddSecurityDefinition(scheme, new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Description = "Cole aqui o accessToken devolvido pelo cadastro ou login."
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference(scheme, document)] = []
+    });
+});
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();

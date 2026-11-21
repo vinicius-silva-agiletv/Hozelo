@@ -1,4 +1,5 @@
 // Acesso fortemente tipado às mensagens de ResourceMessagesException.resx.
+#nullable enable
 using System.Globalization;
 using System.Resources;
 
