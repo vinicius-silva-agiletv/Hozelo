@@ -224,3 +224,57 @@ Content-Type: application/json
 ### 29. Resumo do mês atual (ou ?year=2027&month=1; &categoryId=... filtra sem acumulado)
 GET {{Hozelo.Api_HostAddress}}/summaries
 Authorization: Bearer {{token}}
+
+### ---------------- Feature 004: reembolsos de terceiros ----------------
+
+### 30. Cadastrar pessoa
+# @name person
+POST {{Hozelo.Api_HostAddress}}/people
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Sogro" }
+
+### 31. Pessoas com saldo até hoje e devido no mês
+GET {{Hozelo.Api_HostAddress}}/people
+Authorization: Bearer {{token}}
+
+### 32. Despesa no cartão marcada como do sogro (personPercent opcional, padrão 100)
+# @name markedExpense
+POST {{Hozelo.Api_HostAddress}}/expenses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Peças do carro",
+  "categoryId": {{category.response.body.$.id}},
+  "amountType": "Total",
+  "amount": 1500.00,
+  "isInstallment": true,
+  "installmentsCount": 10,
+  "firstDueDate": "2026-11-05",
+  "personId": {{person.response.body.$.id}}
+}
+
+### 33. Cobrança avulsa
+POST {{Hozelo.Api_HostAddress}}/people/{{person.response.body.$.id}}/charges
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "description": "Empréstimo em dinheiro", "amount": 300.00, "chargeDate": "2026-11-10" }
+
+### 34. Extrato do mês (o que não foi pago passa para o mês seguinte)
+# @name statement
+GET {{Hozelo.Api_HostAddress}}/people/{{person.response.body.$.id}}/statement
+Authorization: Bearer {{token}}
+
+### 35. Pagamento parcial (chargeKeys opcional: escolhe as cobranças quitadas primeiro)
+POST {{Hozelo.Api_HostAddress}}/people/{{person.response.body.$.id}}/payments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "amount": 100.00, "paidOn": "2026-11-21", "chargeKeys": ["{{statement.response.body.$.charges[0].key}}"] }
+
+### 36. Resumo por compra: parcelas, total, pago e quanto falta
+GET {{Hozelo.Api_HostAddress}}/people/{{person.response.body.$.id}}/summary
+Authorization: Bearer {{token}}
