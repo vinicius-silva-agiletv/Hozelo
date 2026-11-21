@@ -1,4 +1,4 @@
-// Acesso fortemente tipado às mensagens de ResourceMessagesException.resx.
+﻿// Acesso fortemente tipado às mensagens de ResourceMessagesException.resx.
 #nullable enable
 using System.Globalization;
 using System.Resources;
@@ -43,4 +43,68 @@ public static class ResourceMessagesException
     public static string INVALID_SESSION => ResourceManager.GetString("INVALID_SESSION", Culture)!;
 
     public static string UNKNOWN_ERROR => ResourceManager.GetString("UNKNOWN_ERROR", Culture)!;
+
+    public static string CATEGORY_NAME_EMPTY => ResourceManager.GetString("CATEGORY_NAME_EMPTY", Culture)!;
+
+    public static string CATEGORY_NAME_TOO_LONG => ResourceManager.GetString("CATEGORY_NAME_TOO_LONG", Culture)!;
+
+    public static string CATEGORY_NAME_ALREADY_EXISTS => ResourceManager.GetString("CATEGORY_NAME_ALREADY_EXISTS", Culture)!;
+
+    public static string CATEGORY_HAS_EXPENSES => ResourceManager.GetString("CATEGORY_HAS_EXPENSES", Culture)!;
+
+    public static string CATEGORY_NOT_FOUND => ResourceManager.GetString("CATEGORY_NOT_FOUND", Culture)!;
+
+    public static string EXPENSE_NAME_EMPTY => ResourceManager.GetString("EXPENSE_NAME_EMPTY", Culture)!;
+
+    public static string EXPENSE_NAME_TOO_LONG => ResourceManager.GetString("EXPENSE_NAME_TOO_LONG", Culture)!;
+
+    public static string EXPENSE_CATEGORY_EMPTY => ResourceManager.GetString("EXPENSE_CATEGORY_EMPTY", Culture)!;
+
+    public static string EXPENSE_CATEGORY_NOT_EXISTS => ResourceManager.GetString("EXPENSE_CATEGORY_NOT_EXISTS", Culture)!;
+
+    public static string EXPENSE_AMOUNT_TYPE_INVALID => ResourceManager.GetString("EXPENSE_AMOUNT_TYPE_INVALID", Culture)!;
+
+    public static string AMOUNT_MUST_BE_POSITIVE => ResourceManager.GetString("AMOUNT_MUST_BE_POSITIVE", Culture)!;
+
+    public static string AMOUNT_TOO_MANY_DECIMALS => ResourceManager.GetString("AMOUNT_TOO_MANY_DECIMALS", Culture)!;
+
+    public static string EXPENSE_TOTAL_TOO_HIGH => ResourceManager.GetString("EXPENSE_TOTAL_TOO_HIGH", Culture)!;
+
+    public static string SINGLE_PAYMENT_MUST_HAVE_ONE_INSTALLMENT => ResourceManager.GetString("SINGLE_PAYMENT_MUST_HAVE_ONE_INSTALLMENT", Culture)!;
+
+    public static string INSTALLMENTS_COUNT_OUT_OF_RANGE => ResourceManager.GetString("INSTALLMENTS_COUNT_OUT_OF_RANGE", Culture)!;
+
+    public static string FIRST_DUE_DATE_EMPTY => ResourceManager.GetString("FIRST_DUE_DATE_EMPTY", Culture)!;
+
+    public static string ALREADY_PAID_INSTALLMENTS_OUT_OF_RANGE => ResourceManager.GetString("ALREADY_PAID_INSTALLMENTS_OUT_OF_RANGE", Culture)!;
+
+    public static string TOTAL_TOO_SMALL_FOR_INSTALLMENTS => ResourceManager.GetString("TOTAL_TOO_SMALL_FOR_INSTALLMENTS", Culture)!;
+
+    public static string EXPENSE_NOTES_TOO_LONG => ResourceManager.GetString("EXPENSE_NOTES_TOO_LONG", Culture)!;
+
+    public static string EXPENSE_NOT_FOUND => ResourceManager.GetString("EXPENSE_NOT_FOUND", Culture)!;
+
+    public static string INSTALLMENT_NOT_FOUND => ResourceManager.GetString("INSTALLMENT_NOT_FOUND", Culture)!;
+
+    public static string PAID_INSTALLMENTS_EXCEED_COUNT => ResourceManager.GetString("PAID_INSTALLMENTS_EXCEED_COUNT", Culture)!;
+
+    public static string UNDO_PREPAYMENTS_BEFORE_RESCHEDULE => ResourceManager.GetString("UNDO_PREPAYMENTS_BEFORE_RESCHEDULE", Culture)!;
+
+    public static string PAID_ON_IN_FUTURE => ResourceManager.GetString("PAID_ON_IN_FUTURE", Culture)!;
+
+    public static string AMORTIZATION_SELECTION_REQUIRED => ResourceManager.GetString("AMORTIZATION_SELECTION_REQUIRED", Culture)!;
+
+    public static string AMORTIZATION_QUANTITY_INVALID => ResourceManager.GetString("AMORTIZATION_QUANTITY_INVALID", Culture)!;
+
+    public static string AMORTIZATION_INSTALLMENTS_INVALID => ResourceManager.GetString("AMORTIZATION_INSTALLMENTS_INVALID", Culture)!;
+
+    public static string PAID_AMOUNT_INVALID => ResourceManager.GetString("PAID_AMOUNT_INVALID", Culture)!;
+
+    public static string PAID_AMOUNT_EXCEEDS_SELECTED => ResourceManager.GetString("PAID_AMOUNT_EXCEEDS_SELECTED", Culture)!;
+
+    public static string PAID_AMOUNT_TOO_SMALL => ResourceManager.GetString("PAID_AMOUNT_TOO_SMALL", Culture)!;
+
+    public static string EXPENSE_STATUS_INVALID => ResourceManager.GetString("EXPENSE_STATUS_INVALID", Culture)!;
+
+    public static string MONTH_INVALID => ResourceManager.GetString("MONTH_INVALID", Culture)!;
 }

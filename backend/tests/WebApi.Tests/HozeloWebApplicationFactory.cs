@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,7 +46,7 @@ public class HozeloWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         });
     }
 
-    /// <summary>Remove a conta e zera o controle de tentativas entre os testes.</summary>
+    /// <summary>Remove a conta (e, em cascata, categorias, despesas e parcelas) e zera o controle de tentativas.</summary>
     public async Task ResetDatabaseAsync()
     {
         _ = Server; // garante que a API subiu e as migrations rodaram
@@ -56,7 +56,7 @@ public class HozeloWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
         await using var command = new NpgsqlCommand(
             """
-            TRUNCATE TABLE users RESTART IDENTITY;
+            TRUNCATE TABLE users RESTART IDENTITY CASCADE;
             DO $$
             BEGIN
                 IF to_regclass('login_throttle') IS NOT NULL THEN

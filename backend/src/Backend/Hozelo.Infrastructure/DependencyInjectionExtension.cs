@@ -1,10 +1,15 @@
 using FluentMigrator.Runner;
 using Hozelo.Domain.Repositories;
+using Hozelo.Domain.Repositories.Category;
+using Hozelo.Domain.Repositories.Expense;
+using Hozelo.Domain.Repositories.Installment;
 using Hozelo.Domain.Repositories.LoginThrottle;
 using Hozelo.Domain.Repositories.User;
 using Hozelo.Domain.Security.Cryptography;
 using Hozelo.Domain.Security.Tokens;
+using Hozelo.Domain.Services.Calendar;
 using Hozelo.Domain.Services.LoggedUser;
+using Hozelo.Infrastructure.Services.Calendar;
 using Hozelo.Infrastructure.Services.LoggedUser;
 using Hozelo.Infrastructure.DataAccess;
 using Hozelo.Infrastructure.DataAccess.Repositories;
@@ -30,6 +35,7 @@ public static class DependencyInjectionExtension
         AddFluentMigrator(services, connectionString);
         AddRepositories(services);
         AddSecurity(services, configuration);
+        AddCalendar(services, configuration);
     }
 
     public static string ConnectionString(this IConfiguration configuration)
@@ -65,6 +71,26 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserWriteOnlyRepository>(sp => sp.GetRequiredService<UserRepository>());
 
         services.AddScoped<ILoginThrottleRepository, LoginThrottleRepository>();
+
+        services.AddScoped<CategoryRepository>();
+        services.AddScoped<ICategoryReadOnlyRepository>(sp => sp.GetRequiredService<CategoryRepository>());
+        services.AddScoped<ICategoryWriteOnlyRepository>(sp => sp.GetRequiredService<CategoryRepository>());
+        services.AddScoped<ICategoryUpdateOnlyRepository>(sp => sp.GetRequiredService<CategoryRepository>());
+
+        services.AddScoped<ExpenseRepository>();
+        services.AddScoped<IExpenseReadOnlyRepository>(sp => sp.GetRequiredService<ExpenseRepository>());
+        services.AddScoped<IExpenseWriteOnlyRepository>(sp => sp.GetRequiredService<ExpenseRepository>());
+        services.AddScoped<IExpenseUpdateOnlyRepository>(sp => sp.GetRequiredService<ExpenseRepository>());
+
+        services.AddScoped<IInstallmentReadOnlyRepository, InstallmentRepository>();
+    }
+
+    private static void AddCalendar(IServiceCollection services, IConfiguration configuration)
+    {
+        var settings = configuration.GetSection(CalendarSettings.Section).Get<CalendarSettings>() ?? new CalendarSettings();
+
+        services.AddSingleton(settings);
+        services.AddSingleton<ICalendar, Calendar>();
     }
 
     private static void AddSecurity(IServiceCollection services, IConfiguration configuration)

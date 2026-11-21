@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -53,5 +53,101 @@
   </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>
+  </data>
+  <data name="CATEGORY_NAME_EMPTY" xml:space="preserve">
+    <value>O nome da categoria não pode estar vazio.</value>
+  </data>
+  <data name="CATEGORY_NAME_TOO_LONG" xml:space="preserve">
+    <value>O nome da categoria deve ter no máximo 50 caracteres.</value>
+  </data>
+  <data name="CATEGORY_NAME_ALREADY_EXISTS" xml:space="preserve">
+    <value>Já existe uma categoria com esse nome.</value>
+  </data>
+  <data name="CATEGORY_HAS_EXPENSES" xml:space="preserve">
+    <value>Não é possível remover uma categoria que possui despesas. Mova ou remova as despesas antes.</value>
+  </data>
+  <data name="CATEGORY_NOT_FOUND" xml:space="preserve">
+    <value>Categoria não encontrada.</value>
+  </data>
+  <data name="EXPENSE_NAME_EMPTY" xml:space="preserve">
+    <value>O nome da despesa não pode estar vazio.</value>
+  </data>
+  <data name="EXPENSE_NAME_TOO_LONG" xml:space="preserve">
+    <value>O nome da despesa deve ter no máximo 100 caracteres.</value>
+  </data>
+  <data name="EXPENSE_CATEGORY_EMPTY" xml:space="preserve">
+    <value>Informe a categoria da despesa.</value>
+  </data>
+  <data name="EXPENSE_CATEGORY_NOT_EXISTS" xml:space="preserve">
+    <value>A categoria informada não existe.</value>
+  </data>
+  <data name="EXPENSE_AMOUNT_TYPE_INVALID" xml:space="preserve">
+    <value>Informe se o valor é o total ou o da parcela.</value>
+  </data>
+  <data name="AMOUNT_MUST_BE_POSITIVE" xml:space="preserve">
+    <value>O valor deve ser maior que zero.</value>
+  </data>
+  <data name="AMOUNT_TOO_MANY_DECIMALS" xml:space="preserve">
+    <value>O valor deve ter no máximo 2 casas decimais.</value>
+  </data>
+  <data name="EXPENSE_TOTAL_TOO_HIGH" xml:space="preserve">
+    <value>O valor total da despesa é muito alto.</value>
+  </data>
+  <data name="SINGLE_PAYMENT_MUST_HAVE_ONE_INSTALLMENT" xml:space="preserve">
+    <value>Despesa à vista deve ter exatamente 1 parcela.</value>
+  </data>
+  <data name="INSTALLMENTS_COUNT_OUT_OF_RANGE" xml:space="preserve">
+    <value>Despesa parcelada deve ter de 2 a 480 parcelas.</value>
+  </data>
+  <data name="FIRST_DUE_DATE_EMPTY" xml:space="preserve">
+    <value>Informe a data da primeira parcela.</value>
+  </data>
+  <data name="ALREADY_PAID_INSTALLMENTS_OUT_OF_RANGE" xml:space="preserve">
+    <value>As parcelas já pagas devem estar entre 0 e a quantidade de parcelas.</value>
+  </data>
+  <data name="TOTAL_TOO_SMALL_FOR_INSTALLMENTS" xml:space="preserve">
+    <value>O valor total é pequeno demais para essa quantidade de parcelas.</value>
+  </data>
+  <data name="EXPENSE_NOTES_TOO_LONG" xml:space="preserve">
+    <value>A observação deve ter no máximo 500 caracteres.</value>
+  </data>
+  <data name="EXPENSE_NOT_FOUND" xml:space="preserve">
+    <value>Despesa não encontrada.</value>
+  </data>
+  <data name="INSTALLMENT_NOT_FOUND" xml:space="preserve">
+    <value>Parcela não encontrada.</value>
+  </data>
+  <data name="PAID_INSTALLMENTS_EXCEED_COUNT" xml:space="preserve">
+    <value>A despesa já tem mais parcelas pagas do que a nova quantidade de parcelas.</value>
+  </data>
+  <data name="UNDO_PREPAYMENTS_BEFORE_RESCHEDULE" xml:space="preserve">
+    <value>Desfaça os pagamentos antecipados antes de alterar valor, parcelas ou datas.</value>
+  </data>
+  <data name="PAID_ON_IN_FUTURE" xml:space="preserve">
+    <value>A data do pagamento não pode ser futura.</value>
+  </data>
+  <data name="AMORTIZATION_SELECTION_REQUIRED" xml:space="preserve">
+    <value>Informe as parcelas ou a quantidade de parcelas a amortizar.</value>
+  </data>
+  <data name="AMORTIZATION_QUANTITY_INVALID" xml:space="preserve">
+    <value>Quantidade de parcelas a amortizar inválida.</value>
+  </data>
+  <data name="AMORTIZATION_INSTALLMENTS_INVALID" xml:space="preserve">
+    <value>Só é possível amortizar parcelas em aberto desta despesa.</value>
+  </data>
+  <data name="PAID_AMOUNT_INVALID" xml:space="preserve">
+    <value>O valor pago deve ser maior que zero e ter no máximo 2 casas decimais.</value>
+  </data>
+  <data name="PAID_AMOUNT_EXCEEDS_SELECTED" xml:space="preserve">
+    <value>O valor pago não pode ser maior que a soma das parcelas escolhidas.</value>
+  </data>
+  <data name="PAID_AMOUNT_TOO_SMALL" xml:space="preserve">
+    <value>O valor pago é pequeno demais para a quantidade de parcelas escolhidas.</value>
+  </data>
+  <data name="EXPENSE_STATUS_INVALID" xml:space="preserve">
+    <value>Situação inválida. Use Open ou Paid.</value>
+  </data>
+  <data name="MONTH_INVALID" xml:space="preserve">
+    <value>Informe um mês válido (1 a 12) e um ano entre 2000 e 2100.</value>
   </data>
 </root>
