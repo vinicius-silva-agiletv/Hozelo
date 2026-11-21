@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import { expect } from 'vitest'
 import type { ReactElement } from 'react'
 import { MemoryRouter, useLocation } from 'react-router'
 
@@ -22,9 +23,15 @@ export function renderWithProviders(ui: ReactElement, { path = '/' }: { path?: s
   )
 }
 
-/** O app inteiro (rotas, guardas e layouts) a partir de `path`. */
-export function renderApp(path = '/') {
-  return renderWithProviders(<App />, { path })
+/**
+ * O app inteiro (rotas, guardas e layouts) a partir de `path`. As telas são carregadas sob demanda,
+ * então espera o indicador de carregamento sumir antes de devolver.
+ */
+export async function renderApp(path = '/') {
+  const result = renderWithProviders(<App />, { path })
+  // Primeira importação de uma tela pode levar mais que o padrão de 1 s com os testes em paralelo.
+  await waitFor(() => expect(screen.queryByText('Carregando...')).not.toBeInTheDocument(), { timeout: 5000 })
+  return result
 }
 
 export const currentLocation = () => document.querySelector('[data-testid="location"]')?.textContent ?? ''

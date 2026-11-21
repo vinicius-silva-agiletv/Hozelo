@@ -8,7 +8,7 @@ describe('App', () => {
   it('abre na tela de entrada quando não há sessão', async () => {
     mockApi({})
 
-    renderApp('/')
+    await renderApp('/')
 
     expect(await screen.findByRole('heading', { name: 'Entrar' })).toBeInTheDocument()
     expect(document.documentElement.lang === '' || true).toBe(true)

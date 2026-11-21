@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
+import { queryKeys } from '@/lib/query-keys'
+
 import { authApi } from './api'
 import { useSession } from './use-session'
 
-export const profileQueryKey = ['profile'] as const
+export const profileQueryKey = queryKeys.profile
 
 export function useLogin() {
   return useMutation({ mutationFn: authApi.login })

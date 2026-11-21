@@ -16,7 +16,7 @@ async function fill(name: string, email: string, password: string) {
 describe('Criar conta', () => {
   it('valida nome, e-mail e senha mínima', async () => {
     const { calls } = mockApi({})
-    renderApp('/cadastro')
+    await renderApp('/cadastro')
 
     await fill('', 'x@y', '1234567')
 
@@ -31,7 +31,7 @@ describe('Criar conta', () => {
       'POST /users': { status: 201, body: { name: 'Família Silva', tokens: { accessToken: fakeToken() } } },
       'GET /users': { status: 200, body: { name: 'Família Silva', email: 'f@x.com' } },
     })
-    renderApp('/cadastro')
+    await renderApp('/cadastro')
 
     await fill('Família Silva', 'f@x.com', 'senha1234')
 
@@ -42,7 +42,7 @@ describe('Criar conta', () => {
 
   it('conta existente mostra a mensagem e o atalho para a entrada', async () => {
     mockApi({ 'POST /users': { status: 409, body: { errors: ['Já existe uma conta cadastrada. Faça login para continuar.'] } } })
-    renderApp('/cadastro')
+    await renderApp('/cadastro')
 
     await fill('Outra', 'o@x.com', 'senha1234')
 
@@ -53,7 +53,7 @@ describe('Criar conta', () => {
 
   it('mostra todas as mensagens de validação da API', async () => {
     mockApi({ 'POST /users': { status: 400, body: { errors: ['Mensagem A.', 'Mensagem B.'] } } })
-    renderApp('/cadastro')
+    await renderApp('/cadastro')
 
     await fill('Família', 'f@x.com', 'senha1234')
 

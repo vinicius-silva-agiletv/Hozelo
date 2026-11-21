@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router'
 
+import { RouteBoundary } from '@/components/shared/route-error-boundary'
 import { useProfile } from '@/features/auth/hooks'
 
 import { BottomNav } from './bottom-nav'
@@ -14,7 +15,9 @@ export function AppLayout() {
       <SidebarNav className="hidden md:flex" />
       <main className="min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
         <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 md:py-8">
-          <Outlet />
+          <RouteBoundary>
+            <Outlet />
+          </RouteBoundary>
         </div>
       </main>
       <BottomNav className="md:hidden" />

@@ -24,3 +24,35 @@ export interface ResponseUserProfile {
 export interface ResponseError {
   errors: string[]
 }
+
+export type CategoryType = 'Expense' | 'Income'
+
+export interface ResponseCategory {
+  id: number
+  name: string
+  type: CategoryType
+  /** Despesas, receitas e recorrências da categoria. */
+  entriesCount: number
+}
+
+export interface ResponseCategories {
+  categories: ResponseCategory[]
+}
+
+export interface RequestCategory {
+  name: string
+  /** Obrigatório na criação; omitido ao renomear (o tipo não muda). */
+  type?: CategoryType
+}
+
+export interface ResponseOpeningBalance {
+  /** Pode ser negativo. */
+  amount: number
+  /** "yyyy-MM-dd" */
+  referenceDate: string
+}
+
+export interface RequestOpeningBalance {
+  amount: number
+  referenceDate: string
+}

@@ -3,7 +3,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useState, type ReactNode } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
-import { TooltipProvider } from '@/components/ui/tooltip'
 import { SessionProvider } from '@/features/auth/session'
 import { ApiError } from '@/lib/api'
 
@@ -26,10 +25,8 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <TooltipProvider>
-          {children}
-          <Toaster richColors position="top-right" />
-        </TooltipProvider>
+        {children}
+        <Toaster richColors position="top-right" />
       </SessionProvider>
       {import.meta.env.DEV && import.meta.env.MODE !== 'test' && <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />}
     </QueryClientProvider>

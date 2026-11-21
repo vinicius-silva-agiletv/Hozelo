@@ -11,7 +11,7 @@ describe('navegação', () => {
   it('menu lateral com as seis áreas e destaque da atual', async () => {
     storeSession('Família')
     mockApi(profile)
-    renderApp('/receitas')
+    await renderApp('/receitas')
 
     const sidebar = screen.getByRole('navigation', { name: 'Menu principal' })
     const links = within(sidebar).getAllByRole('link')
@@ -27,7 +27,7 @@ describe('navegação', () => {
   it('nome da conta vem do perfil', async () => {
     storeSession('Nome antigo')
     mockApi(profile)
-    renderApp('/')
+    await renderApp('/')
 
     expect((await screen.findAllByText('Família Silva Souza'))[0]).toHaveAttribute('title', 'Família Silva Souza')
   })
@@ -35,7 +35,7 @@ describe('navegação', () => {
   it('barra do rodapé com 4 áreas e "Mais" com o restante, a conta e Sair', async () => {
     storeSession('Família')
     mockApi(profile)
-    renderApp('/')
+    await renderApp('/')
 
     const bottom = screen.getByRole('navigation', { name: 'Navegação inferior' })
     expect(within(bottom).getAllByRole('link').map((l) => l.textContent)).toEqual(['Resumo', 'Despesas', 'Receitas', 'Pessoas'])
@@ -53,7 +53,7 @@ describe('navegação', () => {
   it('sair encerra a sessão e volta à entrada', async () => {
     storeSession('Família')
     mockApi(profile)
-    renderApp('/despesas')
+    await renderApp('/despesas')
 
     const sidebar = screen.getByRole('navigation', { name: 'Menu principal' }).closest('aside')!
     await userEvent.click(within(sidebar).getByRole('button', { name: 'Sair' }))
@@ -65,7 +65,7 @@ describe('navegação', () => {
 
   it('endereço inexistente mostra 404 com atalho para o início', async () => {
     mockApi({})
-    renderApp('/xyz')
+    await renderApp('/xyz')
 
     expect(screen.getByText('Página não encontrada')).toBeInTheDocument()
     expect(document.title).toBe('Página não encontrada · Hozelo')
