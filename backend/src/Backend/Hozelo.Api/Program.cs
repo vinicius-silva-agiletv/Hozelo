@@ -54,7 +54,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Em desenvolvimento o frontend chama a API em http pelo proxy do Vite (frontend/vite.config.ts).
+// Redirecionar para https (perfil "https" do launchSettings) mandaria o navegador para outra origem
+// (https://localhost:7156) e a chamada seria bloqueada por CORS. Fora de desenvolvimento, segue ativo.
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
 
 app.MapControllers();
 
