@@ -30,7 +30,7 @@ public class RecurrenceUseCasesTest
         var categories = new CategoryRepositoryBuilder()
             .WithCategory(CategoryBuilder.Build(3, "Carro"))
             .WithCategory(CategoryBuilder.Build(9, "Salário", type: CategoryType.Income));
-        var useCase = new RegisterRecurrenceUseCase(LoggedUserBuilder.Build(_user), categories.ReadOnly.Object,
+        var useCase = new RegisterRecurrenceUseCase(LoggedUserBuilder.Build(_user), categories.ReadOnly.Object, new Mock<Hozelo.Domain.Repositories.Person.IPersonReadOnlyRepository>().Object,
             new Mock<IRecurrenceWriteOnlyRepository>().Object, UnitOfWorkBuilder.Build(), CalendarBuilder.Build(), new FakeTimeProvider());
 
         var salary = await useCase.Execute(RequestRecurrenceJsonBuilder.Salary(9));

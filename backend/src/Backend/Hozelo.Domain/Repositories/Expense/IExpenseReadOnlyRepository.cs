@@ -7,4 +7,7 @@ public interface IExpenseReadOnlyRepository
 
     /// <summary>Despesas do usuário com categoria e parcelas, opcionalmente de uma categoria.</summary>
     Task<IList<Entities.Expense>> GetAll(long userId, long? categoryId);
+
+    /// <summary>Despesas marcadas (com parcelas) de uma pessoa, ou de qualquer pessoa quando null.</summary>
+    Task<IList<Entities.Expense>> GetMarked(long userId, long? personId);
 }

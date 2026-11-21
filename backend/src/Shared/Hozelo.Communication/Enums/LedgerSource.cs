@@ -5,5 +5,6 @@ public enum LedgerSource
 {
     Installment = 1,
     Income = 2,
-    Recurrence = 3
+    Recurrence = 3,
+    Reimbursement = 4
 }

@@ -87,7 +87,7 @@ public class RegisterExpenseUseCaseTest
             .Callback<Hozelo.Domain.Entities.Expense>(e => added = e);
 
         var useCase = new RegisterExpenseUseCase(
-            LoggedUserBuilder.Build(_user), categories.ReadOnly.Object, expenses.WriteOnly.Object,
+            LoggedUserBuilder.Build(_user), categories.ReadOnly.Object, new Mock<Hozelo.Domain.Repositories.Person.IPersonReadOnlyRepository>().Object, expenses.WriteOnly.Object,
             UnitOfWorkBuilder.Build(), new FakeTimeProvider());
 
         return (useCase, () => added!);

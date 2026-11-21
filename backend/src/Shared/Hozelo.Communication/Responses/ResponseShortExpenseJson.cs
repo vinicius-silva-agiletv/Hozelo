@@ -39,4 +39,8 @@ public class ResponseShortExpenseJson
     public ExpenseStatus Status { get; set; }
 
     public string? Notes { get; set; }
+
+    public ResponsePersonSummaryJson? Person { get; set; }
+
+    public int? PersonPercent { get; set; }
 }

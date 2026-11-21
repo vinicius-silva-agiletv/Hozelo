@@ -6,6 +6,8 @@ using Hozelo.Domain.Enums;
 using Hozelo.Domain.Repositories;
 using Hozelo.Domain.Repositories.Category;
 using Hozelo.Domain.Repositories.Expense;
+using Hozelo.Domain.Repositories.Person;
+using Hozelo.Application.UseCases.Person;
 using Hozelo.Domain.Services.LoggedUser;
 using Hozelo.Exception;
 using Hozelo.Exception.ExceptionsBase;
@@ -15,6 +17,7 @@ namespace Hozelo.Application.UseCases.Expense.Update;
 public sealed class UpdateExpenseUseCase(
     ILoggedUser loggedUser,
     ICategoryReadOnlyRepository categoryRepository,
+    IPersonReadOnlyRepository personRepository,
     IExpenseUpdateOnlyRepository updateOnlyRepository,
     IExpenseReadOnlyRepository readOnlyRepository,
     IUnitOfWork unitOfWork) : IUpdateExpenseUseCase
@@ -31,6 +34,7 @@ public sealed class UpdateExpenseUseCase(
         var errors = new ExpenseValidator().Validate(request).Messages();
 
         await CategoryChecker.Check(categoryRepository, user.Id, request.CategoryId, CategoryType.Expense, errors);
+        await PersonChecker.Check(personRepository, user.Id, request.PersonId, errors);
 
         ValidationErrors.ThrowIfAny(errors);
 
@@ -57,6 +61,8 @@ public sealed class UpdateExpenseUseCase(
         expense.Name = request.Name;
         expense.CategoryId = request.CategoryId;
         expense.Notes = request.Notes;
+        expense.PersonId = request.PersonId;
+        expense.PersonPercent = PersonChecker.Percent(request.PersonId, request.PersonPercent);
 
         await unitOfWork.Commit();
 

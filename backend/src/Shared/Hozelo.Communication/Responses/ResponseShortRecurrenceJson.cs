@@ -23,4 +23,8 @@ public class ResponseShortRecurrenceJson
     public decimal CurrentAmount { get; set; }
 
     public string? Notes { get; set; }
+
+    public ResponsePersonSummaryJson? Person { get; set; }
+
+    public int? PersonPercent { get; set; }
 }

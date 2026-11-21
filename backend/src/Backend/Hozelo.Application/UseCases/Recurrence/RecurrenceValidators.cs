@@ -23,6 +23,8 @@ public class UpdateRecurrenceValidator : AbstractValidator<RequestUpdateRecurren
 
         RuleFor(r => r.Notes)
             .MaximumLength(IncomeValidator.NotesMaxLength).WithMessage(ResourceMessagesException.EXPENSE_NOTES_TOO_LONG);
+
+        Person.PersonMarkingRules.Add(this, r => r.PersonId, r => r.PersonPercent);
     }
 
     public static void Normalize(RequestUpdateRecurrenceJson request)
@@ -47,6 +49,11 @@ public class RecurrenceValidator : AbstractValidator<RequestRecurrenceJson>
             .WithMessage(ResourceMessagesException.RECURRENCE_KIND_INVALID);
 
         RuleFor(r => r.Amount).SetValidator(new AmountValidator());
+
+        RuleFor(r => r)
+            .Must(r => r.PersonId is null || r.Kind != Communication.Enums.EntryKind.Income)
+            .WithName(nameof(RequestRecurrenceJson.PersonId))
+            .WithMessage(ResourceMessagesException.RECURRENCE_INCOME_CANNOT_BE_MARKED);
 
         RuleFor(r => r.StartMonth)
             .Must(YearMonth.IsValid).WithMessage(ResourceMessagesException.MONTH_FORMAT_INVALID);

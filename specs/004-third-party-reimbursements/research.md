@@ -102,6 +102,9 @@ parcelas (002), `BalanceCalculator` e `GET /summaries` (003).
   - Na resposta, as entradas de reembolso são agregadas em **um item por pessoa** no mês
     (`amount` = cobranças, novo campo `settledAmount` = pagamentos); `category` é `null`.
   - Com filtro de categoria, reembolsos não entram (FR-020).
+- **Dívida antiga paga no mês atual**: a parte dos pagamentos do mês atual que quita o saldo
+    anterior (até o valor dele) sai da pendência e entra como entrada prevista do mês atual; assim
+    a pendência some na hora (US5-4) e o acumulado não muda.
 - **Por que fecha a conta (SC-007)**: no mês atual, um pagamento de dívida antiga reduz o saldo da
   pessoa em `X` (pendência −X) e entra no realizado; como o mês atual conta o **previsto**
   (cobranças, não pagamentos), o acumulado ao fim do mês não muda.

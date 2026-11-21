@@ -151,4 +151,36 @@ public static class ResourceMessagesException
     public static string INCOME_NOT_FOUND => ResourceManager.GetString("INCOME_NOT_FOUND", Culture)!;
 
     public static string RECURRENCE_NOT_FOUND => ResourceManager.GetString("RECURRENCE_NOT_FOUND", Culture)!;
+
+    public static string PERSON_NAME_EMPTY => ResourceManager.GetString("PERSON_NAME_EMPTY", Culture)!;
+
+    public static string PERSON_NAME_TOO_LONG => ResourceManager.GetString("PERSON_NAME_TOO_LONG", Culture)!;
+
+    public static string PERSON_NAME_ALREADY_EXISTS => ResourceManager.GetString("PERSON_NAME_ALREADY_EXISTS", Culture)!;
+
+    public static string PERSON_HAS_ENTRIES => ResourceManager.GetString("PERSON_HAS_ENTRIES", Culture)!;
+
+    public static string PERSON_NOT_FOUND => ResourceManager.GetString("PERSON_NOT_FOUND", Culture)!;
+
+    public static string PERSON_NOT_EXISTS => ResourceManager.GetString("PERSON_NOT_EXISTS", Culture)!;
+
+    public static string PERSON_PERCENT_INVALID => ResourceManager.GetString("PERSON_PERCENT_INVALID", Culture)!;
+
+    public static string PERSON_PERCENT_WITHOUT_PERSON => ResourceManager.GetString("PERSON_PERCENT_WITHOUT_PERSON", Culture)!;
+
+    public static string RECURRENCE_INCOME_CANNOT_BE_MARKED => ResourceManager.GetString("RECURRENCE_INCOME_CANNOT_BE_MARKED", Culture)!;
+
+    public static string DESCRIPTION_EMPTY => ResourceManager.GetString("DESCRIPTION_EMPTY", Culture)!;
+
+    public static string DESCRIPTION_TOO_LONG => ResourceManager.GetString("DESCRIPTION_TOO_LONG", Culture)!;
+
+    public static string CHARGE_DATE_EMPTY => ResourceManager.GetString("CHARGE_DATE_EMPTY", Culture)!;
+
+    public static string PAYMENT_DATE_EMPTY => ResourceManager.GetString("PAYMENT_DATE_EMPTY", Culture)!;
+
+    public static string PAYMENT_TARGETS_INVALID => ResourceManager.GetString("PAYMENT_TARGETS_INVALID", Culture)!;
+
+    public static string CHARGE_NOT_FOUND => ResourceManager.GetString("CHARGE_NOT_FOUND", Culture)!;
+
+    public static string PAYMENT_NOT_FOUND => ResourceManager.GetString("PAYMENT_NOT_FOUND", Culture)!;
 }

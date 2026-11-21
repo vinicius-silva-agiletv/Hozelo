@@ -19,6 +19,9 @@ using Hozelo.Application.UseCases.Income.Register;
 using Hozelo.Application.UseCases.Income.Update;
 using Hozelo.Application.UseCases.Installment.GetMonthly;
 using Hozelo.Application.UseCases.OpeningBalance;
+using Hozelo.Application.UseCases.Person;
+using Hozelo.Application.UseCases.Person.Entries;
+using Hozelo.Application.UseCases.Person.Statement;
 using Hozelo.Application.UseCases.Summary.GetMonthly;
 using Hozelo.Application.UseCases.Recurrence.Delete;
 using Hozelo.Application.UseCases.Recurrence.Get;
@@ -88,5 +91,10 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IOpeningBalanceUseCase, OpeningBalanceUseCase>();
         services.AddScoped<IGetMonthlySummaryUseCase, GetMonthlySummaryUseCase>();
+
+        services.AddScoped<IPersonLedgerLoader, PersonLedgerLoader>();
+        services.AddScoped<IPersonUseCase, PersonUseCase>();
+        services.AddScoped<IPersonEntriesUseCase, PersonEntriesUseCase>();
+        services.AddScoped<IPersonStatementUseCase, PersonStatementUseCase>();
     }
 }

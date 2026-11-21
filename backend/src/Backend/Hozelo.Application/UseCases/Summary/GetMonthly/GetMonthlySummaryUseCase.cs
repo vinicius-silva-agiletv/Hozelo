@@ -4,6 +4,8 @@ using Hozelo.Domain.Enums;
 using Hozelo.Domain.Repositories.Income;
 using Hozelo.Domain.Repositories.Installment;
 using Hozelo.Domain.Repositories.OpeningBalance;
+using Hozelo.Domain.Repositories.Person;
+using Hozelo.Application.UseCases.Person;
 using Hozelo.Domain.Repositories.Recurrence;
 using Hozelo.Domain.Services.Calendar;
 using Hozelo.Domain.Services.LoggedUser;
@@ -22,6 +24,8 @@ public sealed class GetMonthlySummaryUseCase(
     IIncomeReadOnlyRepository incomeRepository,
     IRecurrenceReadOnlyRepository recurrenceRepository,
     IOpeningBalanceRepository openingBalanceRepository,
+    IPersonReadOnlyRepository personRepository,
+    IPersonLedgerLoader personLedgerLoader,
     ICalendar calendar) : IGetMonthlySummaryUseCase
 {
     public async Task<ResponseMonthlySummaryJson> Execute(int? year, int? month, long? categoryId)
@@ -41,14 +45,25 @@ public sealed class GetMonthlySummaryUseCase(
 
         var entries = await LoadEntries(user.Id, start, end, categoryId);
 
+        // Reembolsos de terceiros (feature 004): só sem filtro de categoria.
+        var reimbursementPending = new List<ResponseLedgerItemJson>();
+        var extraPending = 0.00m;
+        if (categoryId is null)
+            (extraPending, reimbursementPending) = await AddReimbursements(user.Id, entries, start, end, currentMonth);
+
         var monthEntries = entries.Where(e => e.Month == target).OrderBy(e => e.Date).ThenBy(e => e.Name).ToList();
         var totals = BalanceCalculator.Totals(monthEntries);
+
+        var incomeItems = monthEntries.Where(e => e.Direction == EntryKind.Income && e.Source != LedgerSource.Reimbursement).Select(ToItem)
+            .Concat(ReimbursementItems(monthEntries, target))
+            .OrderBy(i => i.Date).ThenBy(i => i.Name)
+            .ToList();
 
         var response = new ResponseMonthlySummaryJson
         {
             Year = target.Year,
             Month = target.Month,
-            Incomes = monthEntries.Where(e => e.Direction == EntryKind.Income).Select(ToItem).ToList(),
+            Incomes = incomeItems,
             Expenses = monthEntries.Where(e => e.Direction == EntryKind.Expense).Select(ToItem).ToList(),
             Forecast = new ResponseForecastJson
             {
@@ -73,13 +88,13 @@ public sealed class GetMonthlySummaryUseCase(
             var pending = BalanceCalculator.Pending(entries, opening, currentMonth);
             response.Pending = new ResponsePendingJson
             {
-                ToReceive = pending.Where(e => e.Direction == EntryKind.Income).Aggregate(0.00m, (t, e) => t + e.Amount),
+                ToReceive = pending.Where(e => e.Direction == EntryKind.Income).Aggregate(0.00m, (t, e) => t + e.Amount) + extraPending,
                 ToPay = pending.Where(e => e.Direction == EntryKind.Expense).Aggregate(0.00m, (t, e) => t + e.Amount),
-                Items = pending.Select(ToItem).ToList()
+                Items = pending.Select(ToItem).Concat(reimbursementPending).ToList()
             };
         }
 
-        var accumulated = BalanceCalculator.Accumulated(entries, opening, currentMonth, target);
+        var accumulated = BalanceCalculator.Accumulated(entries, opening, currentMonth, target, extraPending);
         if (accumulated is not null)
             response.Accumulated = new ResponseAccumulatedJson
             {
@@ -161,6 +176,98 @@ public sealed class GetMonthlySummaryUseCase(
         return entries;
     }
 
+    /// <summary>
+    /// Uma entrada por cobrança (previsto) e uma por pagamento (realizado) de cada pessoa; pendência do mês atual = saldo
+    /// líquido de cada pessoa ao fim do mês anterior (research.md 004 §9).
+    /// </summary>
+    private async Task<(decimal ExtraPending, List<ResponseLedgerItemJson> PendingItems)> AddReimbursements(
+        long userId, List<LedgerEntry> entries, DateOnly start, DateOnly end, DateOnly currentMonth)
+    {
+        var people = (await personRepository.GetAll(userId)).ToDictionary(p => p.Id);
+        var ledgers = await personLedgerLoader.Load(userId, null, end);
+        var pendingItems = new List<ResponseLedgerItemJson>();
+        var extraPending = 0.00m;
+        var previousMonth = currentMonth.AddMonths(-1);
+
+        foreach (var (personId, ledger) in ledgers)
+        {
+            if (!people.TryGetValue(personId, out var person))
+                continue;
+
+            var name = $"Reembolso — {person.Name}";
+
+            foreach (var charge in ledger.Charges.Where(c => c.Month >= start && c.Month < end))
+                entries.Add(Reimbursement(personId, name, charge.Month, charge.Date, charge.Amount, 0m, null));
+
+            foreach (var payment in ledger.Payments.Where(p => p.PaidOn >= start && p.PaidOn < end))
+                entries.Add(Reimbursement(personId, name, YearMonth.FirstDay(payment.PaidOn), payment.PaidOn, 0m, payment.Amount, payment.PaidOn));
+
+            // Dívida antiga paga no mês atual sai da pendência e entra no previsto do mês (acumulado não muda, SC-007).
+            var current = PersonStatementCalculator.Month(ledger.Charges.ToList(), ledger.Payments.ToList(), currentMonth);
+            var appliedToOldDebt = current.PreviousBalance > 0 ? Math.Min(current.TotalPaid, current.PreviousBalance) : 0m;
+            if (appliedToOldDebt > 0 && currentMonth >= start && currentMonth < end)
+                entries.Add(Reimbursement(personId, name, currentMonth, currentMonth, appliedToOldDebt, 0m, null));
+
+            var balance = current.PreviousBalance - appliedToOldDebt;
+            if (balance == 0)
+                continue;
+
+            extraPending += balance;
+            pendingItems.Add(new ResponseLedgerItemJson
+            {
+                Source = Communication.Enums.LedgerSource.Reimbursement,
+                SourceId = personId,
+                Direction = Communication.Enums.EntryKind.Income,
+                Name = name,
+                Category = null,
+                Month = YearMonth.Format(previousMonth),
+                Date = previousMonth,
+                Amount = balance
+            });
+        }
+
+        return (extraPending, pendingItems);
+    }
+
+    private static LedgerEntry Reimbursement(long personId, string name, DateOnly month, DateOnly date, decimal amount, decimal settled, DateOnly? settledOn) => new()
+    {
+        Direction = EntryKind.Income,
+        Source = LedgerSource.Reimbursement,
+        SourceId = personId,
+        Name = name,
+        CategoryId = 0,
+        CategoryName = string.Empty,
+        Month = month,
+        Date = date,
+        Amount = amount,
+        SettledOn = settledOn,
+        SettledAmount = settled,
+        PendingExempt = true
+    };
+
+    /// <summary>Um item por pessoa no mês: previsto = cobranças, realizado = pagamentos.</summary>
+    private static IEnumerable<ResponseLedgerItemJson> ReimbursementItems(IEnumerable<LedgerEntry> monthEntries, DateOnly month) =>
+        monthEntries
+            .Where(e => e.Source == LedgerSource.Reimbursement)
+            .GroupBy(e => e.SourceId)
+            .Select(g =>
+            {
+                var paid = g.Aggregate(0.00m, (t, e) => t + e.SettledAmount);
+                return new ResponseLedgerItemJson
+                {
+                    Source = Communication.Enums.LedgerSource.Reimbursement,
+                    SourceId = g.Key,
+                    Direction = Communication.Enums.EntryKind.Income,
+                    Name = g.First().Name,
+                    Category = null,
+                    Month = YearMonth.Format(month),
+                    Date = month,
+                    Amount = g.Aggregate(0.00m, (t, e) => t + e.Amount),
+                    IsSettled = paid > 0,
+                    SettledAmount = paid
+                };
+            });
+
     private static ResponseLedgerItemJson ToItem(LedgerEntry entry) => new()
     {
         Source = (Communication.Enums.LedgerSource)(int)entry.Source,
@@ -174,6 +281,7 @@ public sealed class GetMonthlySummaryUseCase(
         Date = entry.Date,
         Amount = entry.Amount,
         IsSettled = entry.IsSettled,
+        SettledAmount = entry.IsSettled ? entry.SettledAmount : null,
         SettledOn = entry.SettledOn,
         PaidInAdvance = entry.PaidInAdvance
     };

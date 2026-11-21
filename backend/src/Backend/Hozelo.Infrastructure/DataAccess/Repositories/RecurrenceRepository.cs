@@ -28,6 +28,12 @@ public sealed class RecurrenceRepository(HozeloDbContext dbContext)
         return await query.OrderBy(r => r.Name).ToListAsync();
     }
 
+    public async Task<IList<RecurringEntry>> GetMarked(long userId, long? personId) =>
+        await dbContext.Set<RecurringEntry>().AsNoTracking()
+            .Include(r => r.Amounts).Include(r => r.Months).AsSplitQuery()
+            .Where(r => r.UserId == userId && r.PersonId != null && (personId == null || r.PersonId == personId))
+            .ToListAsync();
+
     Task<RecurringEntry?> IRecurrenceUpdateOnlyRepository.GetById(long userId, long recurrenceId) =>
         dbContext.Set<RecurringEntry>()
             .Include(r => r.Amounts)
@@ -36,5 +42,5 @@ public sealed class RecurrenceRepository(HozeloDbContext dbContext)
             .FirstOrDefaultAsync(r => r.UserId == userId && r.Id == recurrenceId);
 
     private static IQueryable<RecurringEntry> WithDetails(IQueryable<RecurringEntry> query) =>
-        query.Include(r => r.Category).Include(r => r.Amounts).Include(r => r.Months).AsSplitQuery();
+        query.Include(r => r.Category).Include(r => r.Person).Include(r => r.Amounts).Include(r => r.Months).AsSplitQuery();
 }

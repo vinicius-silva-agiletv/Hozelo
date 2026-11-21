@@ -39,7 +39,8 @@ public class ResponseLedgerItemJson
 
     public string Name { get; set; } = string.Empty;
 
-    public ResponseCategorySummaryJson Category { get; set; } = new();
+    /// <summary>Null para reembolsos (não pertencem a categoria).</summary>
+    public ResponseCategorySummaryJson? Category { get; set; }
 
     /// <summary>Mês de referência "yyyy-MM".</summary>
     public string Month { get; set; } = string.Empty;
@@ -49,6 +50,9 @@ public class ResponseLedgerItemJson
     public decimal Amount { get; set; }
 
     public bool IsSettled { get; set; }
+
+    /// <summary>Valor que de fato entrou/saiu (para reembolsos, os pagamentos do mês).</summary>
+    public decimal? SettledAmount { get; set; }
 
     public DateOnly? SettledOn { get; set; }
 

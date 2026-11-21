@@ -1,4 +1,5 @@
 using FluentValidation;
+using Hozelo.Application.UseCases.Person;
 using Hozelo.Communication.Enums;
 using Hozelo.Communication.Requests;
 using Hozelo.Domain.Calculations;
@@ -53,6 +54,8 @@ public class ExpenseValidator : AbstractValidator<RequestUpdateExpenseJson>
 
         RuleFor(r => r.Notes)
             .MaximumLength(NotesMaxLength).WithMessage(ResourceMessagesException.EXPENSE_NOTES_TOO_LONG);
+
+        PersonMarkingRules.Add(this, r => r.PersonId, r => r.PersonPercent);
 
         // Regras que dependem de valor, tipo e quantidade válidos ao mesmo tempo.
         When(r => IsAmountValid(r) && IsCountValid(r) && r.AmountType.HasValue && Enum.IsDefined(r.AmountType.Value), () =>

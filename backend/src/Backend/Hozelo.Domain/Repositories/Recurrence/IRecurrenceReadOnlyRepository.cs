@@ -9,4 +9,7 @@ public interface IRecurrenceReadOnlyRepository
 
     /// <summary>Recorrências do usuário com categoria, valores e meses.</summary>
     Task<IList<Entities.RecurringEntry>> GetAll(long userId, EntryKind? kind, long? categoryId);
+
+    /// <summary>Contas fixas marcadas (com valores e meses) de uma pessoa, ou de qualquer pessoa quando null.</summary>
+    Task<IList<Entities.RecurringEntry>> GetMarked(long userId, long? personId);
 }

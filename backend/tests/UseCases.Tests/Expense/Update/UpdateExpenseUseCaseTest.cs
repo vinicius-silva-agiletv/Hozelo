@@ -149,7 +149,7 @@ public class UpdateExpenseUseCaseTest
         var categories = new CategoryRepositoryBuilder().WithCategory(expense.Category).WithCategory(_otherCategory);
         var repositories = new ExpenseRepositoryBuilder().WithExpense(expense);
         return new UpdateExpenseUseCase(
-            LoggedUserBuilder.Build(User(expense)), categories.ReadOnly.Object, repositories.UpdateOnly.Object,
+            LoggedUserBuilder.Build(User(expense)), categories.ReadOnly.Object, new Mock<Hozelo.Domain.Repositories.Person.IPersonReadOnlyRepository>().Object, repositories.UpdateOnly.Object,
             repositories.ReadOnly.Object, UnitOfWorkBuilder.Build());
     }
 }
