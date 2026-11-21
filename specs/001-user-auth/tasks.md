@@ -41,10 +41,10 @@ Restrições de campos: ver [data-model.md](data-model.md). Decisões: ver
 
 **Purpose**: pacotes e configuração base
 
-- [ ] T001 Adicionar pacotes de produção conforme tabela "Dependências NuGet novas" do plan.md: FluentValidation em `APP/Hozelo.Application.csproj`; Npgsql.EntityFrameworkCore.PostgreSQL, FluentMigrator.Runner.Postgres, Dapper, BCrypt.Net-Next e System.IdentityModel.Tokens.Jwt em `INF/Hozelo.Infrastructure.csproj`
-- [ ] T002 [P] Adicionar pacotes de teste: Moq, Bogus, Shouldly, Microsoft.Extensions.TimeProvider.Testing em `TST/CommonTestUtilities/CommonTestUtilities.csproj`, `TST/UseCases.Tests/UseCases.Tests.csproj` e `TST/Validators.Tests/Validators.Tests.csproj`; Microsoft.AspNetCore.Mvc.Testing, Testcontainers.PostgreSql e Shouldly em `TST/WebApi.Tests/WebApi.Tests.csproj`
-- [ ] T003 [P] Conferir referências entre projetos (Api → Application, Infrastructure, Communication, Exception; Application → Domain, Communication, Exception; Infrastructure → Domain, Exception; testes → projetos testados + CommonTestUtilities) nos `.csproj` de `backend/src` e `backend/tests`
-- [ ] T004 [P] Adicionar seção `Settings` sem segredos em `API/appsettings.json` (`Settings:Jwt:ExpirationTimeMinutes` = 10080, `Settings:LoginLockout:MaxFailedAttempts` = 5, `Settings:LoginLockout:LockoutMinutes` = 15) e `UserSecretsId` em `API/Hozelo.Api.csproj` (research.md §2, §7)
+- [X] T001 Adicionar pacotes de produção conforme tabela "Dependências NuGet novas" do plan.md: FluentValidation em `APP/Hozelo.Application.csproj`; Npgsql.EntityFrameworkCore.PostgreSQL, FluentMigrator.Runner.Postgres, Dapper, BCrypt.Net-Next e System.IdentityModel.Tokens.Jwt em `INF/Hozelo.Infrastructure.csproj`
+- [X] T002 [P] Adicionar pacotes de teste: Moq, Bogus, Shouldly, Microsoft.Extensions.TimeProvider.Testing em `TST/CommonTestUtilities/CommonTestUtilities.csproj`, `TST/UseCases.Tests/UseCases.Tests.csproj` e `TST/Validators.Tests/Validators.Tests.csproj`; Microsoft.AspNetCore.Mvc.Testing, Testcontainers.PostgreSql e Shouldly em `TST/WebApi.Tests/WebApi.Tests.csproj`
+- [X] T003 [P] Conferir referências entre projetos (Api → Application, Infrastructure, Communication, Exception; Application → Domain, Communication, Exception; Infrastructure → Domain, Exception; testes → projetos testados + CommonTestUtilities) nos `.csproj` de `backend/src` e `backend/tests`
+- [X] T004 [P] Adicionar seção `Settings` sem segredos em `API/appsettings.json` (`Settings:Jwt:ExpirationTimeMinutes` = 10080, `Settings:LoginLockout:MaxFailedAttempts` = 5, `Settings:LoginLockout:LockoutMinutes` = 15) e `UserSecretsId` em `API/Hozelo.Api.csproj` (research.md §2, §7)
 
 ---
 
@@ -55,25 +55,25 @@ desta fase terminar.
 
 ### Erros e mensagens
 
-- [ ] T005 [P] Criar `EXC/ResourceMessagesException.resx` (pt-BR, com designer público) contendo todas as mensagens de data-model.md e contracts/api.md, mais "Erro desconhecido."
-- [ ] T006 [P] Criar `EXC/ExceptionsBase/HozeloException.cs` (abstrata, `GetErrorMessages()` e `GetStatusCode()`) e derivadas `ErrorOnValidationException` (400, lista), `InvalidLoginException` (401), `UnauthorizedException` (401), `AccountAlreadyExistsException` (409), `TooManyLoginAttemptsException` (429) em `EXC/ExceptionsBase/` (research.md §9)
-- [ ] T007 [P] Criar `COM/Responses/ResponseErrorJson.cs` (`Errors: IList<string>`)
-- [ ] T008 Criar `API/Filters/ExceptionFilter.cs` convertendo `HozeloException` em `ResponseErrorJson` com o status da exceção e qualquer outra exceção em 500 "Erro desconhecido." sem detalhes; registrar em `API/Program.cs`
+- [X] T005 [P] Criar `EXC/ResourceMessagesException.resx` (pt-BR, com designer público) contendo todas as mensagens de data-model.md e contracts/api.md, mais "Erro desconhecido."
+- [X] T006 [P] Criar `EXC/ExceptionsBase/HozeloException.cs` (abstrata, `GetErrorMessages()` e `GetStatusCode()`) e derivadas `ErrorOnValidationException` (400, lista), `InvalidLoginException` (401), `UnauthorizedException` (401), `AccountAlreadyExistsException` (409), `TooManyLoginAttemptsException` (429) em `EXC/ExceptionsBase/` (research.md §9)
+- [X] T007 [P] Criar `COM/Responses/ResponseErrorJson.cs` (`Errors: IList<string>`)
+- [X] T008 Criar `API/Filters/ExceptionFilter.cs` convertendo `HozeloException` em `ResponseErrorJson` com o status da exceção e qualquer outra exceção em 500 "Erro desconhecido." sem detalhes; registrar em `API/Program.cs`
 
 ### Domínio e acesso a dados
 
-- [ ] T009 [P] Criar `DOM/Entities/EntityBase.cs` com `Id`, `CreatedOn` (UTC) e `Active` conforme data-model.md `EntityBase.Id`, `EntityBase.CreatedOn`, `EntityBase.Active`
-- [ ] T010 [P] Criar `DOM/Repositories/IUnitOfWork.cs` (`Commit()` assíncrono)
-- [ ] T011 Criar `INF/DataAccess/HozeloDbContext.cs` (convenção snake_case, aplica configurações do assembly) e `INF/DataAccess/UnitOfWork.cs`
-- [ ] T012 Criar `INF/Migrations/DatabaseVersions.cs` (constantes sequenciais) e `INF/Migrations/DatabaseMigration.cs`: cria o banco com Dapper + Npgsql conectando no banco `postgres` se não existir, depois executa `MigrateUp` do FluentMigrator (research.md §5)
-- [ ] T013 Criar `INF/DependencyInjectionExtension.cs` (`AddInfrastructure`: DbContext com `ConnectionStrings:Connection`, FluentMigrator runner, UnitOfWork, `TimeProvider.System`) e `APP/DependencyInjectionExtension.cs` (`AddApplication`)
-- [ ] T014 Atualizar `API/Program.cs`: chamar `AddApplication`/`AddInfrastructure`, executar `DatabaseMigration` na inicialização e manter `public partial class Program`
+- [X] T009 [P] Criar `DOM/Entities/EntityBase.cs` com `Id`, `CreatedOn` (UTC) e `Active` conforme data-model.md `EntityBase.Id`, `EntityBase.CreatedOn`, `EntityBase.Active`
+- [X] T010 [P] Criar `DOM/Repositories/IUnitOfWork.cs` (`Commit()` assíncrono)
+- [X] T011 Criar `INF/DataAccess/HozeloDbContext.cs` (convenção snake_case, aplica configurações do assembly) e `INF/DataAccess/UnitOfWork.cs`
+- [X] T012 Criar `INF/Migrations/DatabaseVersions.cs` (constantes sequenciais) e `INF/Migrations/DatabaseMigration.cs`: cria o banco com Dapper + Npgsql conectando no banco `postgres` se não existir, depois executa `MigrateUp` do FluentMigrator (research.md §5)
+- [X] T013 Criar `INF/DependencyInjectionExtension.cs` (`AddInfrastructure`: DbContext com `ConnectionStrings:Connection`, FluentMigrator runner, UnitOfWork, `TimeProvider.System`) e `APP/DependencyInjectionExtension.cs` (`AddApplication`)
+- [X] T014 Atualizar `API/Program.cs`: chamar `AddApplication`/`AddInfrastructure`, executar `DatabaseMigration` na inicialização e manter `public partial class Program`
 
 ### Base de testes
 
-- [ ] T015 [P] Criar `TST/WebApi.Tests/HozeloWebApplicationFactory.cs`: sobe PostgreSQL com Testcontainers, injeta connection string, chave JWT de teste e `FakeTimeProvider`, implementa `IAsyncLifetime`; método para limpar `users` e reiniciar `login_throttle` entre testes
-- [ ] T016 [P] Criar `TST/WebApi.Tests/HozeloClassFixture.cs` com helpers `DoPost`, `DoGet` (com token opcional) e leitura de `errors` da resposta
-- [ ] T017 [P] Criar `TST/CommonTestUtilities/Repositories/UnitOfWorkBuilder.cs` (mock de `IUnitOfWork`)
+- [X] T015 [P] Criar `TST/WebApi.Tests/HozeloWebApplicationFactory.cs`: sobe PostgreSQL com Testcontainers, injeta connection string, chave JWT de teste e `FakeTimeProvider`, implementa `IAsyncLifetime`; método para limpar `users` e reiniciar `login_throttle` entre testes
+- [X] T016 [P] Criar `TST/WebApi.Tests/HozeloClassFixture.cs` com helpers `DoPost`, `DoGet` (com token opcional) e leitura de `errors` da resposta
+- [X] T017 [P] Criar `TST/CommonTestUtilities/Repositories/UnitOfWorkBuilder.cs` (mock de `IUnitOfWork`)
 
 **Checkpoint**: API sobe, cria o banco `hozelo` e a tabela `VersionInfo`; erro inesperado
 retorna 500 padronizado.
@@ -89,26 +89,26 @@ segundo cadastro retorna 409; dados inválidos retornam 400 com todas as mensage
 
 ### Tests for User Story 1
 
-- [ ] T018 [P] [US1] Criar `TST/CommonTestUtilities/Requests/RequestRegisterUserJsonBuilder.cs` (Bogus, senha configurável) e `TST/CommonTestUtilities/Entities/UserBuilder.cs` (retorna usuário + senha em texto)
-- [ ] T019 [P] [US1] Criar fakes `TST/CommonTestUtilities/Cryptography/PasswordEncripterBuilder.cs`, `TST/CommonTestUtilities/Tokens/AccessTokenGeneratorBuilder.cs`, `TST/CommonTestUtilities/Repositories/UserReadOnlyRepositoryBuilder.cs` e `TST/CommonTestUtilities/Repositories/UserWriteOnlyRepositoryBuilder.cs`
-- [ ] T020 [P] [US1] Criar `TST/Validators.Tests/User/Register/RegisterUserValidatorTest.cs`: sucesso; nome vazio/só espaços/>100; e-mail vazio/inválido/>255; senha vazia/<8/exatamente 8 aceita/>72 bytes; múltiplos erros juntos (data-model.md `User.Name`, `User.Email`, `User.Password`)
-- [ ] T021 [P] [US1] Criar `TST/UseCases.Tests/User/Register/RegisterUserUseCaseTest.cs`: sucesso devolve nome e token; conta já existente lança `AccountAlreadyExistsException` (inclusive com dados inválidos); dados inválidos lançam `ErrorOnValidationException` com todas as mensagens; e-mail e nome normalizados antes de salvar
-- [ ] T022 [P] [US1] Criar `TST/WebApi.Tests/User/Register/RegisterUserTest.cs`: 201 com `name` e `tokens.accessToken`; 409 no segundo cadastro com outro e-mail; 400 com mensagens em pt-BR; e-mail gravado em minúsculo
+- [X] T018 [P] [US1] Criar `TST/CommonTestUtilities/Requests/RequestRegisterUserJsonBuilder.cs` (Bogus, senha configurável) e `TST/CommonTestUtilities/Entities/UserBuilder.cs` (retorna usuário + senha em texto)
+- [X] T019 [P] [US1] Criar fakes `TST/CommonTestUtilities/Cryptography/PasswordEncripterBuilder.cs`, `TST/CommonTestUtilities/Tokens/AccessTokenGeneratorBuilder.cs`, `TST/CommonTestUtilities/Repositories/UserReadOnlyRepositoryBuilder.cs` e `TST/CommonTestUtilities/Repositories/UserWriteOnlyRepositoryBuilder.cs`
+- [X] T020 [P] [US1] Criar `TST/Validators.Tests/User/Register/RegisterUserValidatorTest.cs`: sucesso; nome vazio/só espaços/>100; e-mail vazio/inválido/>255; senha vazia/<8/exatamente 8 aceita/>72 bytes; múltiplos erros juntos (data-model.md `User.Name`, `User.Email`, `User.Password`)
+- [X] T021 [P] [US1] Criar `TST/UseCases.Tests/User/Register/RegisterUserUseCaseTest.cs`: sucesso devolve nome e token; conta já existente lança `AccountAlreadyExistsException` (inclusive com dados inválidos); dados inválidos lançam `ErrorOnValidationException` com todas as mensagens; e-mail e nome normalizados antes de salvar
+- [X] T022 [P] [US1] Criar `TST/WebApi.Tests/User/Register/RegisterUserTest.cs`: 201 com `name` e `tokens.accessToken`; 409 no segundo cadastro com outro e-mail; 400 com mensagens em pt-BR; e-mail gravado em minúsculo
 
 ### Implementation for User Story 1
 
-- [ ] T023 [P] [US1] Criar `DOM/Entities/User.cs` herdando `EntityBase`, com campos de data-model.md `User.UserIdentifier`, `User.Name`, `User.Email`, `User.Password`
-- [ ] T024 [P] [US1] Criar `DOM/Repositories/User/IUserReadOnlyRepository.cs` (`ExistsAnyUser`, `GetByEmail`, `GetByUserIdentifier`) e `DOM/Repositories/User/IUserWriteOnlyRepository.cs` (`Add`)
-- [ ] T025 [P] [US1] Criar `DOM/Security/Cryptography/IPasswordEncripter.cs` (`Encrypt`, `IsValid`) e `DOM/Security/Tokens/IAccessTokenGenerator.cs` (`Generate(Guid userIdentifier)`)
-- [ ] T026 [P] [US1] Criar `COM/Requests/RequestRegisterUserJson.cs`, `COM/Responses/ResponseRegisteredUserJson.cs` e `COM/Responses/ResponseTokensJson.cs` conforme contracts/api.md
-- [ ] T027 [US1] Criar migration `INF/Migrations/Versions/Version0000001.cs`: tabela `users` com colunas de data-model.md `EntityBase.Id`, `EntityBase.CreatedOn`, `EntityBase.Active`, `User.UserIdentifier`, `User.Name`, `User.Email`, `User.Password` e índices `ux_users_user_identifier`, `ux_users_email`, `ux_users_single_account` sobre `((true))` (research.md §6)
-- [ ] T028 [US1] Criar mapeamento EF de `User` para `users` em `INF/DataAccess/Configurations/UserConfiguration.cs`
-- [ ] T029 [US1] Criar `INF/DataAccess/Repositories/UserRepository.cs` implementando as duas interfaces de US1; registrar no `INF/DependencyInjectionExtension.cs`
-- [ ] T030 [P] [US1] Criar `INF/Security/Cryptography/BCryptNet.cs` (work factor 12) implementando `IPasswordEncripter`; registrar no DI (research.md §1)
-- [ ] T031 [P] [US1] Criar `INF/Security/Tokens/JwtTokenGenerator.cs`: HS256, claim `sid`, expiração de `Settings:Jwt:ExpirationTimeMinutes`, horário de `TimeProvider`; chave de `Settings:Jwt:SigningKey` com falha na inicialização se < 32 caracteres; registrar no DI (research.md §2)
-- [ ] T032 [US1] Criar `APP/UseCases/User/Register/RegisterUserValidator.cs` com regras de data-model.md `User.Name`, `User.Email`, `User.Password` e mensagens do resource; senha medida em bytes UTF-8 para o teto
-- [ ] T033 [US1] Criar `APP/UseCases/User/Register/IRegisterUserUseCase.cs` e `RegisterUserUseCase.cs`: checa `ExistsAnyUser` primeiro (409), normaliza nome/e-mail, valida, gera hash, cria `UserIdentifier`, salva, `Commit`, converte violação de índice único em `AccountAlreadyExistsException`, devolve nome + token; registrar no `APP/DependencyInjectionExtension.cs`
-- [ ] T034 [US1] Criar `API/Controllers/UsersController.cs` com `POST /users` retornando 201 e `ResponseRegisteredUserJson`, documentando 400 e 409 com `ProducesResponseType`
+- [X] T023 [P] [US1] Criar `DOM/Entities/User.cs` herdando `EntityBase`, com campos de data-model.md `User.UserIdentifier`, `User.Name`, `User.Email`, `User.Password`
+- [X] T024 [P] [US1] Criar `DOM/Repositories/User/IUserReadOnlyRepository.cs` (`ExistsAnyUser`, `GetByEmail`, `GetByUserIdentifier`) e `DOM/Repositories/User/IUserWriteOnlyRepository.cs` (`Add`)
+- [X] T025 [P] [US1] Criar `DOM/Security/Cryptography/IPasswordEncripter.cs` (`Encrypt`, `IsValid`) e `DOM/Security/Tokens/IAccessTokenGenerator.cs` (`Generate(Guid userIdentifier)`)
+- [X] T026 [P] [US1] Criar `COM/Requests/RequestRegisterUserJson.cs`, `COM/Responses/ResponseRegisteredUserJson.cs` e `COM/Responses/ResponseTokensJson.cs` conforme contracts/api.md
+- [X] T027 [US1] Criar migration `INF/Migrations/Versions/Version0000001.cs`: tabela `users` com colunas de data-model.md `EntityBase.Id`, `EntityBase.CreatedOn`, `EntityBase.Active`, `User.UserIdentifier`, `User.Name`, `User.Email`, `User.Password` e índices `ux_users_user_identifier`, `ux_users_email`, `ux_users_single_account` sobre `((true))` (research.md §6)
+- [X] T028 [US1] Criar mapeamento EF de `User` para `users` em `INF/DataAccess/Configurations/UserConfiguration.cs`
+- [X] T029 [US1] Criar `INF/DataAccess/Repositories/UserRepository.cs` implementando as duas interfaces de US1; registrar no `INF/DependencyInjectionExtension.cs`
+- [X] T030 [P] [US1] Criar `INF/Security/Cryptography/BCryptNet.cs` (work factor 12) implementando `IPasswordEncripter`; registrar no DI (research.md §1)
+- [X] T031 [P] [US1] Criar `INF/Security/Tokens/JwtTokenGenerator.cs`: HS256, claim `sid`, expiração de `Settings:Jwt:ExpirationTimeMinutes`, horário de `TimeProvider`; chave de `Settings:Jwt:SigningKey` com falha na inicialização se < 32 caracteres; registrar no DI (research.md §2)
+- [X] T032 [US1] Criar `APP/UseCases/User/Register/RegisterUserValidator.cs` com regras de data-model.md `User.Name`, `User.Email`, `User.Password` e mensagens do resource; senha medida em bytes UTF-8 para o teto
+- [X] T033 [US1] Criar `APP/UseCases/User/Register/IRegisterUserUseCase.cs` e `RegisterUserUseCase.cs`: checa `ExistsAnyUser` primeiro (409), normaliza nome/e-mail, valida, gera hash, cria `UserIdentifier`, salva, `Commit`, converte violação de índice único em `AccountAlreadyExistsException`, devolve nome + token; registrar no `APP/DependencyInjectionExtension.cs`
+- [X] T034 [US1] Criar `API/Controllers/UsersController.cs` com `POST /users` retornando 201 e `ResponseRegisteredUserJson`, documentando 400 e 409 com `ProducesResponseType`
 
 **Checkpoint**: T020–T022 passam; cadastro funciona isoladamente.
 
