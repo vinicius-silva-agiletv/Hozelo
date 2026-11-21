@@ -1,13 +1,14 @@
 import { vi } from 'vitest'
 
-type Reply = { status: number; body?: unknown }
-type Handler = Reply | ((init: RequestInit) => Reply)
+export type Reply = { status: number; body?: unknown }
+export type Handler = Reply | ((init: RequestInit) => Reply)
+export type Routes = Record<string, Handler>
 
 /**
  * Simula a API: chaves "MÉTODO /caminho" (sem o prefixo /api) → resposta.
  * Rotas não mapeadas respondem 500, para o teste falhar de forma clara.
  */
-export function mockApi(routes: Record<string, Handler>) {
+export function mockApi(routes: Routes) {
   const calls: { key: string; init: RequestInit }[] = []
 
   const fetchMock = vi.fn(async (url: string, init: RequestInit = {}) => {
@@ -47,3 +48,6 @@ export function storeSession(accountName = 'Família Silva', persistent = true) 
   )
   return token
 }
+
+/** Corpo JSON enviado numa chamada simulada. */
+export const bodyOf = (init: RequestInit) => (init.body ? JSON.parse(init.body as string) : undefined)

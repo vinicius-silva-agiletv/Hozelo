@@ -19,7 +19,7 @@ async function fillAndSubmit(email: string, password: string) {
 describe('Entrar', () => {
   it('valida os campos antes de enviar', async () => {
     const { calls } = mockApi({})
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }))
 
@@ -32,7 +32,7 @@ describe('Entrar', () => {
 
   it('senha errada mostra a mensagem da API e mantém o e-mail', async () => {
     mockApi({ 'POST /login': { status: 401, body: { errors: ['E-mail e/ou senha inválidos.'] } } })
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     await fillAndSubmit('familia@x.com', 'errada123')
 
@@ -43,7 +43,7 @@ describe('Entrar', () => {
 
   it('bloqueio por tentativas mostra a mensagem da API', async () => {
     mockApi({ 'POST /login': { status: 429, body: { errors: ['Muitas tentativas de login. Tente novamente em alguns minutos.'] } } })
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     await fillAndSubmit('familia@x.com', 'senha1234')
 
@@ -52,7 +52,7 @@ describe('Entrar', () => {
 
   it('entra, guarda a sessão persistente e volta para a área pedida', async () => {
     mockApi({ 'POST /login': loginOk, ...profile })
-    renderApp('/entrar?voltar=%2Fdespesas')
+    await renderApp('/entrar?voltar=%2Fdespesas')
 
     expect(screen.getByRole('checkbox', { name: 'Manter conectado' })).toBeChecked()
     await fillAndSubmit(' Familia@x.com ', 'senha1234')
@@ -65,7 +65,7 @@ describe('Entrar', () => {
 
   it('"Manter conectado" desmarcado guarda a sessão só nesta aba', async () => {
     mockApi({ 'POST /login': loginOk, ...profile })
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     const user = userEvent.setup()
     await user.click(screen.getByRole('checkbox', { name: 'Manter conectado' }))
@@ -78,7 +78,7 @@ describe('Entrar', () => {
   it('falha de conexão mostra mensagem amigável', async () => {
     const { fetchMock } = mockApi({})
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     await fillAndSubmit('familia@x.com', 'senha1234')
 
@@ -87,7 +87,7 @@ describe('Entrar', () => {
 
   it('link para criar conta', async () => {
     mockApi({})
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     await userEvent.click(screen.getByRole('link', { name: 'Criar conta' }))
 

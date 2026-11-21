@@ -1,4 +1,5 @@
 import { Loader2 } from 'lucide-react'
+import type { ReactNode } from 'react'
 
 import {
   AlertDialog,
@@ -21,6 +22,8 @@ interface ConfirmDialogProps {
   destructive?: boolean
   pending?: boolean
   onConfirm: () => void
+  /** Conteúdo extra abaixo da descrição (ex.: mensagem de erro da API). */
+  children?: ReactNode
 }
 
 /** Confirmação de ação (ex.: remover). Fica aberto durante o processamento; quem chama fecha ao concluir. */
@@ -34,6 +37,7 @@ export function ConfirmDialog({
   destructive = false,
   pending = false,
   onConfirm,
+  children,
 }: ConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={(next) => !pending && onOpenChange(next)}>
@@ -42,6 +46,7 @@ export function ConfirmDialog({
           <AlertDialogTitle>{title}</AlertDialogTitle>
           {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
         </AlertDialogHeader>
+        {children}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={pending}>{cancelLabel}</AlertDialogCancel>
           <AlertDialogAction

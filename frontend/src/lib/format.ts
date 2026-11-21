@@ -8,3 +8,9 @@ export const formatDate = (isoDate: string) => {
   const [year, month, day] = isoDate.split('-')
   return `${day}/${month}/${year}`
 }
+
+/** pluralize(0, 'lançamento', 'lançamentos', 'Nenhum lançamento') → "Nenhum lançamento"; 3 → "3 lançamentos" */
+export const pluralize = (count: number, singular: string, plural: string, zero?: string) => {
+  if (count === 0 && zero !== undefined) return zero
+  return `${count} ${count === 1 ? singular : plural}`
+}

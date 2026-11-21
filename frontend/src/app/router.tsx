@@ -1,14 +1,21 @@
+import { lazy } from 'react'
 import { Route, Routes } from 'react-router'
 
 import { navAreas } from '@/app/navigation'
-import { LoginPage } from '@/features/auth/pages/login-page'
-import { RegisterPage } from '@/features/auth/pages/register-page'
+import { RouteBoundary } from '@/components/shared/route-error-boundary'
 import { RedirectIfAuthenticated, RequireAuth } from '@/features/auth/session'
-import { NotFoundPage } from '@/pages/not-found-page'
-import { UnderConstructionPage } from '@/pages/under-construction-page'
 
 import { AppLayout } from './layouts/app-layout'
 import { AuthLayout } from './layouts/auth-layout'
+
+// Telas baixadas só quando acessadas (research.md §9); layouts e guardas ficam no pacote inicial.
+const LoginPage = lazy(() => import('@/features/auth/pages/login-page').then((m) => ({ default: m.LoginPage })))
+const RegisterPage = lazy(() => import('@/features/auth/pages/register-page').then((m) => ({ default: m.RegisterPage })))
+const SettingsPage = lazy(() => import('@/features/settings/pages/settings-page').then((m) => ({ default: m.SettingsPage })))
+const UnderConstructionPage = lazy(() =>
+  import('@/pages/under-construction-page').then((m) => ({ default: m.UnderConstructionPage })),
+)
+const NotFoundPage = lazy(() => import('@/pages/not-found-page').then((m) => ({ default: m.NotFoundPage })))
 
 /** Rotas do app (contracts/ui.md). */
 export function AppRoutes() {
@@ -32,12 +39,22 @@ export function AppRoutes() {
           </RequireAuth>
         }
       >
-        {navAreas.map((area) => (
-          <Route key={area.key} path={area.path} element={<UnderConstructionPage area={area} />} />
-        ))}
+        <Route path="/configuracoes" element={<SettingsPage />} />
+        {navAreas
+          .filter((area) => area.key !== 'settings')
+          .map((area) => (
+            <Route key={area.key} path={area.path} element={<UnderConstructionPage area={area} />} />
+          ))}
       </Route>
 
-      <Route path="*" element={<NotFoundPage />} />
+      <Route
+        path="*"
+        element={
+          <RouteBoundary>
+            <NotFoundPage />
+          </RouteBoundary>
+        }
+      />
     </Routes>
   )
 }

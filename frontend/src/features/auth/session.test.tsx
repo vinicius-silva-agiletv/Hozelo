@@ -8,7 +8,7 @@ describe('sessão e guardas de rota', () => {
   it('sem sessão, uma área leva à entrada guardando o caminho', async () => {
     mockApi({})
 
-    renderApp('/despesas')
+    await renderApp('/despesas')
 
     expect(await screen.findByRole('heading', { name: 'Entrar' })).toBeInTheDocument()
     expect(currentLocation()).toBe('/entrar?voltar=%2Fdespesas')
@@ -18,7 +18,7 @@ describe('sessão e guardas de rota', () => {
     storeSession()
     mockApi({ 'GET /users': { status: 200, body: { name: 'Família Silva', email: 'f@x.com' } } })
 
-    renderApp('/entrar')
+    await renderApp('/entrar')
 
     expect(await screen.findByRole('heading', { name: 'Resumo do mês' })).toBeInTheDocument()
     expect(currentLocation()).toBe('/')
@@ -28,7 +28,7 @@ describe('sessão e guardas de rota', () => {
     storeSession()
     mockApi({ 'GET /users': { status: 401, body: { errors: ['Sessão inválida ou expirada. Faça login novamente.'] } } })
 
-    renderApp('/pessoas')
+    await renderApp('/pessoas')
 
     expect(await screen.findByText('Sua sessão expirou. Entre novamente.')).toBeInTheDocument()
     await waitFor(() => expect(currentLocation()).toBe('/entrar?expirada=1&voltar=%2Fpessoas'))
@@ -39,7 +39,7 @@ describe('sessão e guardas de rota', () => {
     localStorage.setItem('hozelo.session', JSON.stringify({ accessToken: 'a.eyJleHAiOjF9.b', accountName: 'X' }))
     mockApi({})
 
-    renderApp('/')
+    await renderApp('/')
 
     expect(await screen.findByRole('heading', { name: 'Entrar' })).toBeInTheDocument()
   })

@@ -1,5 +1,7 @@
 import { Outlet } from 'react-router'
 
+import { RouteBoundary } from '@/components/shared/route-error-boundary'
+
 import { Card, CardContent } from '@/components/ui/card'
 
 import { Brand } from './brand'
@@ -11,7 +13,9 @@ export function AuthLayout() {
       <Brand />
       <Card className="w-full max-w-sm">
         <CardContent>
-          <Outlet />
+          <RouteBoundary>
+            <Outlet />
+          </RouteBoundary>
         </CardContent>
       </Card>
     </main>
