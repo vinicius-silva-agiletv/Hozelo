@@ -21,7 +21,6 @@ describe('navegação', () => {
     await userEvent.click(within(sidebar).getByRole('link', { name: 'Resumo do mês' }))
     expect(await screen.findByRole('heading', { name: 'Resumo do mês' })).toBeInTheDocument()
     expect(document.title).toBe('Resumo do mês · Hozelo')
-    expect(screen.getAllByText('Em construção').length).toBeGreaterThan(0)
   })
 
   it('nome da conta vem do perfil', async () => {

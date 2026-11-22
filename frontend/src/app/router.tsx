@@ -17,13 +17,14 @@ const IncomesPage = lazy(() => import('@/features/incomes/pages/incomes-page').t
 const FixedBillsPage = lazy(() => import('@/features/fixed-bills/pages/fixed-bills-page').then((m) => ({ default: m.FixedBillsPage })))
 const PeoplePage = lazy(() => import('@/features/people/pages/people-page').then((m) => ({ default: m.PeoplePage })))
 const PersonPage = lazy(() => import('@/features/people/pages/person-page').then((m) => ({ default: m.PersonPage })))
+const SummaryPage = lazy(() => import('@/features/summary/pages/summary-page').then((m) => ({ default: m.SummaryPage })))
 const UnderConstructionPage = lazy(() =>
   import('@/pages/under-construction-page').then((m) => ({ default: m.UnderConstructionPage })),
 )
 const NotFoundPage = lazy(() => import('@/pages/not-found-page').then((m) => ({ default: m.NotFoundPage })))
 
 /** Áreas que já têm tela própria (as demais mostram "em construção"). */
-const BUILT_AREAS = new Set(['settings', 'expenses', 'incomes', 'fixedBills', 'people'])
+const BUILT_AREAS = new Set(['summary', 'settings', 'expenses', 'incomes', 'fixedBills', 'people'])
 
 /** Rotas do app (contracts/ui.md). */
 export function AppRoutes() {
@@ -47,6 +48,7 @@ export function AppRoutes() {
           </RequireAuth>
         }
       >
+        <Route path="/" element={<SummaryPage />} />
         <Route path="/configuracoes" element={<SettingsPage />} />
         <Route path="/despesas" element={<ExpensesPage />} />
         <Route path="/receitas" element={<IncomesPage />} />
