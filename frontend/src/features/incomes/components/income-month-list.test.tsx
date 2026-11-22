@@ -61,8 +61,8 @@ describe('Receitas do mês (US1)', () => {
     const row = rows()[1]
     expect(within(row).queryByRole('checkbox')).not.toBeInTheDocument()
     expect(within(row).queryByRole('button', { name: /Ações/ })).not.toBeInTheDocument()
-    await userEvent.click(within(row).getByRole('button', { name: 'Reembolso de Esposa, ver em Pessoas' }))
-    await waitFor(() => expect(currentLocation()).toBe('/pessoas'))
+    await userEvent.click(within(row).getByRole('button', { name: 'Abrir Esposa em Pessoas' }))
+    await waitFor(() => expect(currentLocation()).toBe(`/pessoas/900?mes=${month}`))
   })
 
   it('troca o mês e filtra por categoria, mantendo no endereço', async () => {

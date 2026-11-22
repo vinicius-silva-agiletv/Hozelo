@@ -19,4 +19,11 @@ export const queryKeys = {
   recurrences: ['recurrences'] as const,
   recurrenceList: (kind: EntryKind) => ['recurrences', kind] as const,
   recurrence: (id: number) => ['recurrence', id] as const,
+  personStatements: ['person-statement'] as const,
+  personStatement: (id: number, month: string) => ['person-statement', id, month] as const,
+  personSummaries: ['person-summary'] as const,
+  personSummary: (id: number) => ['person-summary', id] as const,
 }
+
+/** Tudo que depende das cobranças das pessoas (mudam com despesas e contas fixas divididas). */
+export const peopleDependentKeys = [queryKeys.people, queryKeys.personStatements, queryKeys.personSummaries]

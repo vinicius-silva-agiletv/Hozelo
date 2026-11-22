@@ -1,6 +1,6 @@
 import { useMutation, useQueries, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query'
 
-import { queryKeys } from '@/lib/query-keys'
+import { peopleDependentKeys, queryKeys } from '@/lib/query-keys'
 import type { EntryKind, RequestRecurrence, RequestUpdateRecurrence, ResponseRecurrence } from '@/types/api'
 
 import { recurrencesApi } from './api'
@@ -38,6 +38,7 @@ async function afterChange(client: QueryClient, recurrence?: ResponseRecurrence)
   await Promise.all([
     client.invalidateQueries({ queryKey: queryKeys.summary }),
     client.invalidateQueries({ queryKey: queryKeys.recurrences }),
+    ...peopleDependentKeys.map((queryKey) => client.invalidateQueries({ queryKey })),
   ])
 }
 

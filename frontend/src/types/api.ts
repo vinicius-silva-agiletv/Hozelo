@@ -294,3 +294,92 @@ export interface ResponseMonthlySummary {
   accumulated: { previousBalance: number; endBalance: number } | null
   openingBalanceMissing: boolean
 }
+
+export type ChargeOriginType = 'Expense' | 'Recurrence' | 'Manual'
+export type ChargeStatus = 'Open' | 'Partial' | 'Paid'
+
+export interface RequestPerson {
+  name: string
+}
+
+export interface RequestPersonCharge {
+  description: string
+  amount: number
+  chargeDate: string
+  notes: string | null
+}
+
+export interface ResponsePersonCharge {
+  id: number
+  key: string
+  description: string
+  amount: number
+  chargeDate: string
+  notes: string | null
+}
+
+export interface RequestPersonPayment {
+  amount: number
+  paidOn: string
+  notes: string | null
+  /** Cobranças que este pagamento quita primeiro (opcional). */
+  chargeKeys?: string[]
+}
+
+export interface ResponsePersonPayment {
+  id: number
+  amount: number
+  paidOn: string
+  notes: string | null
+  chargeKeys: string[]
+}
+
+export interface ResponsePersonChargeItem {
+  key: string
+  originType: ChargeOriginType
+  /** Id da despesa, da recorrência ou da cobrança avulsa. */
+  originId: number
+  description: string
+  number: number | null
+  count: number | null
+  date: string
+  amount: number
+  paid: number
+  remaining: number
+  status: ChargeStatus
+}
+
+export interface ResponsePersonStatement {
+  person: PersonSummary
+  year: number
+  month: number
+  previousBalance: number
+  charges: ResponsePersonChargeItem[]
+  totalCharges: number
+  totalDue: number
+  payments: ResponsePersonPayment[]
+  totalPaid: number
+  /** Negativo = crédito da pessoa. */
+  endBalance: number
+}
+
+export interface ResponsePersonOrigin {
+  originType: ChargeOriginType
+  originId: number
+  description: string
+  chargesDue: number
+  chargesTotal: number
+  monthlyAmount: number | null
+  total: number
+  paid: number
+  remaining: number
+  isOpenEnded: boolean
+}
+
+export interface ResponsePersonOverview {
+  person: PersonSummary
+  origins: ResponsePersonOrigin[]
+  owedUntilNow: number
+  owedTotal: number
+  unallocatedCredit: number
+}
