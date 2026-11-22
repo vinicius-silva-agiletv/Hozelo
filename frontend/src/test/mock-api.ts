@@ -1,11 +1,12 @@
 import { vi } from 'vitest'
 
 export type Reply = { status: number; body?: unknown }
-export type Handler = Reply | ((init: RequestInit) => Reply)
+export type Handler = Reply | ((init: RequestInit, key: string) => Reply | undefined)
 export type Routes = Record<string, Handler>
 
 /**
- * Simula a API: chaves "MÉTODO /caminho" (sem o prefixo /api) → resposta.
+ * Simula a API: chaves "MÉTODO /caminho" (sem o prefixo /api) → resposta. A chave "*" atende o que
+ * não tiver chave exata (recebe a chave e pode devolver `undefined` para "não atendo").
  * Rotas não mapeadas respondem 500, para o teste falhar de forma clara.
  */
 export function mockApi(routes: Routes) {
@@ -15,10 +16,10 @@ export function mockApi(routes: Routes) {
     const key = `${init.method ?? 'GET'} ${url.replace(/^\/api/, '')}`
     calls.push({ key, init })
 
-    const handler = routes[key]
-    const reply = handler === undefined
-      ? { status: 500, body: { errors: [`Rota não simulada: ${key}`] } }
-      : typeof handler === 'function' ? handler(init) : handler
+    const run = (handler: Handler | undefined) =>
+      handler === undefined ? undefined : typeof handler === 'function' ? handler(init, key) : handler
+    const reply = run(routes[key]) ??
+      run(routes['*']) ?? { status: 500, body: { errors: [`Rota não simulada: ${key}`] } }
 
     return new Response(reply.body === undefined ? null : JSON.stringify(reply.body), {
       status: reply.status,
