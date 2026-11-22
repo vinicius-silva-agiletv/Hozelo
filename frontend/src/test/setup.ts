@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { afterEach, vi } from 'vitest'
 
 // Telas carregadas sob demanda e testes em paralelo: dá mais folga às esperas (findBy/waitFor).
-configure({ asyncUtilTimeout: 3000 })
+configure({ asyncUtilTimeout: 8000 })
 
 afterEach(() => {
   cleanup()

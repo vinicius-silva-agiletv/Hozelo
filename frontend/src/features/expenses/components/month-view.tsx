@@ -12,7 +12,7 @@ import { formatMonth } from '@/lib/month'
 
 import { useMonthlyInstallments } from '../hooks'
 import { installmentLabel } from '../labels'
-import { CategoryFilter } from './category-filter'
+import { CategoryFilter } from '@/components/shared/category-filter'
 import { InstallmentRow } from './installment-row'
 import { PayOnDateDialog, type PayTarget } from './pay-on-date-dialog'
 

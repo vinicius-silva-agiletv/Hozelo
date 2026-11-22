@@ -1,15 +1,17 @@
 import { NativeSelect } from '@/components/shared/native-select'
 import { useCategories } from '@/features/categories/hooks'
+import type { CategoryType } from '@/types/api'
 
 interface CategoryFilterProps {
   id: string
   value: number | null
   onChange: (categoryId: number | null) => void
+  type?: CategoryType
 }
 
-/** Filtro por categoria de despesa ("Todas" = sem filtro). */
-export function CategoryFilter({ id, value, onChange }: CategoryFilterProps) {
-  const categories = useCategories('Expense')
+/** Filtro por categoria de despesa ou receita ("Todas" = sem filtro). */
+export function CategoryFilter({ id, value, onChange, type = 'Expense' }: CategoryFilterProps) {
+  const categories = useCategories(type)
   return (
     <div className="flex items-center gap-2">
       <label htmlFor={id} className="text-sm text-muted-foreground">

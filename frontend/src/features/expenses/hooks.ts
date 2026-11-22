@@ -47,6 +47,7 @@ const refreshLists = (client: QueryClient) =>
   Promise.all([
     client.invalidateQueries({ queryKey: queryKeys.installments }),
     client.invalidateQueries({ queryKey: queryKeys.expenses }),
+    client.invalidateQueries({ queryKey: queryKeys.summary }),
   ])
 
 const storeExpense = (client: QueryClient, expense: ResponseExpense) =>

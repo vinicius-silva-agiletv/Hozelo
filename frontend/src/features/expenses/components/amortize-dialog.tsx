@@ -17,7 +17,7 @@ import type { ResponseExpense } from '@/types/api'
 
 import { useAmortizeExpense } from '../hooks'
 import { amortizationPreview } from '../preview'
-import { OptionGroup } from './option-group'
+import { OptionGroup } from '@/components/shared/option-group'
 
 /** Amortizar parcelas futuras (US5, FR-011). */
 export function AmortizeDialog({ expense, onClose }: { expense: ResponseExpense | null; onClose: () => void }) {

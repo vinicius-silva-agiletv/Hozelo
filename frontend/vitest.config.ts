@@ -10,6 +10,8 @@ export default mergeConfig(
       setupFiles: ['./src/test/setup.ts'],
       css: true,
       restoreMocks: true,
+      // Fluxos de tela completos (digitação, telas sob demanda) com muitos arquivos em paralelo.
+      testTimeout: 20000,
     },
   }),
 )

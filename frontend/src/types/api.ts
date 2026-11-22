@@ -179,3 +179,118 @@ export interface ResponsePerson {
 export interface ResponsePeople {
   people: ResponsePerson[]
 }
+
+export type EntryKind = 'Expense' | 'Income'
+export type LedgerSource = 'Installment' | 'Income' | 'Recurrence' | 'Reimbursement'
+
+export interface ResponseIncome {
+  id: number
+  name: string
+  category: CategorySummary
+  amount: number
+  expectedDate: string
+  isReceived: boolean
+  receivedOn: string | null
+  notes: string | null
+}
+
+export interface ResponseIncomes {
+  incomes: ResponseIncome[]
+}
+
+export interface RequestUpdateIncome {
+  name: string
+  categoryId: number
+  amount: number
+  expectedDate: string
+  notes: string | null
+}
+
+export interface RequestIncome extends RequestUpdateIncome {
+  /** Registrar já como recebida nesta data (não futura). */
+  receivedOn?: string | null
+}
+
+export interface ResponseShortRecurrence {
+  id: number
+  kind: EntryKind
+  name: string
+  category: CategorySummary
+  dayOfMonth: number
+  /** "yyyy-MM" */
+  startMonth: string
+  endMonth: string | null
+  isActive: boolean
+  currentAmount: number
+  notes: string | null
+  person: PersonSummary | null
+  personPercent: number | null
+}
+
+export interface ResponseRecurrenceAmount {
+  fromMonth: string
+  amount: number
+}
+
+export interface ResponseRecurrenceMonth {
+  month: string
+  /** Valor só deste mês (ajuste). */
+  amount: number | null
+  skipped: boolean
+  settledOn: string | null
+}
+
+export interface ResponseRecurrence extends ResponseShortRecurrence {
+  amounts: ResponseRecurrenceAmount[]
+  months: ResponseRecurrenceMonth[]
+}
+
+export interface ResponseRecurrences {
+  recurrences: ResponseShortRecurrence[]
+}
+
+export interface RequestUpdateRecurrence {
+  name: string
+  categoryId: number
+  dayOfMonth: number
+  notes: string | null
+  personId: number | null
+  personPercent: number | null
+}
+
+export interface RequestRecurrence extends RequestUpdateRecurrence {
+  kind: EntryKind
+  amount: number
+  startMonth: string
+  endMonth: string | null
+}
+
+export interface ResponseLedgerItem {
+  source: LedgerSource
+  sourceId: number
+  direction: EntryKind
+  number: number | null
+  installmentsCount: number | null
+  name: string
+  category: CategorySummary | null
+  /** "yyyy-MM" */
+  month: string
+  date: string
+  amount: number
+  isSettled: boolean
+  settledAmount: number | null
+  settledOn: string | null
+  paidInAdvance: boolean
+}
+
+export interface ResponseMonthlySummary {
+  year: number
+  month: number
+  incomes: ResponseLedgerItem[]
+  expenses: ResponseLedgerItem[]
+  forecast: { incomes: number; expenses: number; balance: number }
+  realized: { received: number; paid: number; balance: number }
+  pending: { toReceive: number; toPay: number; items: ResponseLedgerItem[] } | null
+  accumulated: { previousBalance: number; endBalance: number } | null
+  openingBalanceMissing: boolean
+}
