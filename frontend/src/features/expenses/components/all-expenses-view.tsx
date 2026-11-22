@@ -12,7 +12,7 @@ import type { ExpenseStatus } from '@/types/api'
 
 import { useExpenses } from '../hooks'
 import { personText } from '../labels'
-import { CategoryFilter } from './category-filter'
+import { CategoryFilter } from '@/components/shared/category-filter'
 
 interface AllExpensesViewProps {
   categoryId: number | null

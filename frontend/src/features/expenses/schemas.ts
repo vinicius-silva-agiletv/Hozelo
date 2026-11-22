@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { isValidIsoDate } from '@/lib/date'
+import { checkPersonSplit, emptyPersonSplit, personSplitFromApi, personSplitToRequest } from '@/lib/person-split'
 import type { AmountType, RequestRegisterExpense, ResponseExpense } from '@/types/api'
 
 /** data-model.md ExpenseForm (mesmos limites da API: features 002 e 004). */
@@ -34,13 +35,7 @@ export const expenseSchema = z
     if (!(Number.isInteger(paid) && paid >= 0 && (!Number.isInteger(count) || paid <= count))) {
       issue('alreadyPaidInstallments', 'Informe de 0 até a quantidade de parcelas.')
     }
-    if (form.splitWithPerson) {
-      if (form.personId === null) issue('personId', 'Escolha a pessoa.')
-      const percent = form.personPercent
-      if (form.shareMode === 'percent' && !(percent !== null && Number.isInteger(percent) && percent >= 1 && percent <= 100)) {
-        issue('personPercent', 'Informe um percentual de 1 a 100.')
-      }
-    }
+    checkPersonSplit(form, issue)
   })
 
 export type ExpenseForm = z.infer<typeof expenseSchema>
@@ -56,16 +51,12 @@ export function emptyExpenseForm(firstDueDate: string): ExpenseForm {
     firstDueDate,
     alreadyPaidInstallments: 0,
     notes: '',
-    splitWithPerson: false,
-    personId: null,
-    shareMode: 'full',
-    personPercent: null,
+    ...emptyPersonSplit,
   }
 }
 
 /** Valores da edição: mesmo modo de valor do cadastro (FR-009). */
 export function expenseToForm(expense: ResponseExpense): ExpenseForm {
-  const percent = expense.personPercent
   return {
     name: expense.name,
     categoryId: expense.category.id,
@@ -76,15 +67,11 @@ export function expenseToForm(expense: ResponseExpense): ExpenseForm {
     firstDueDate: expense.firstDueDate,
     alreadyPaidInstallments: 0,
     notes: expense.notes ?? '',
-    splitWithPerson: expense.person !== null,
-    personId: expense.person?.id ?? null,
-    shareMode: percent !== null && percent < 100 ? 'percent' : 'full',
-    personPercent: percent !== null && percent < 100 ? percent : null,
+    ...personSplitFromApi(expense.person, expense.personPercent),
   }
 }
 
 export function formToRequest(form: ExpenseForm): RequestRegisterExpense {
-  const split = form.splitWithPerson && form.personId !== null
   return {
     name: form.name.trim(),
     categoryId: form.categoryId!,
@@ -95,7 +82,6 @@ export function formToRequest(form: ExpenseForm): RequestRegisterExpense {
     firstDueDate: form.firstDueDate,
     alreadyPaidInstallments: form.alreadyPaidInstallments,
     notes: form.notes.trim() ? form.notes.trim() : null,
-    personId: split ? form.personId : null,
-    personPercent: split ? (form.shareMode === 'full' ? 100 : form.personPercent) : null,
+    ...personSplitToRequest(form),
   }
 }

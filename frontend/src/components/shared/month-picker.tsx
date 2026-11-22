@@ -10,6 +10,8 @@ interface MonthPickerProps {
   /** "yyyy-MM" */
   value: string
   onChange: (month: string) => void
+  /** Nome acessível do grupo (quando há mais de um seletor na tela). */
+  label?: string
 }
 
 const SHORT_MONTHS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
@@ -20,7 +22,7 @@ const MAX_YEAR = Number(MAX_MONTH.slice(0, 4))
  * Navega de mês em mês (2000-01 a 2100-12), com atalho para o mês atual e escolha direta: tocar no
  * nome do mês abre a grade de meses do ano.
  */
-export function MonthPicker({ value, onChange }: MonthPickerProps) {
+export function MonthPicker({ value, onChange, label = 'Seletor de mês' }: MonthPickerProps) {
   const today = currentMonth()
   const [open, setOpen] = useState(false)
   const [year, setYear] = useState(() => Number(value.slice(0, 4)))
@@ -31,8 +33,8 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
   }
 
   return (
-    <div className="flex items-center gap-1" role="group" aria-label="Seletor de mês">
-      <Button
+    <div className="flex flex-wrap items-center gap-1" role="group" aria-label={label}>
+      <Button type="button"
         variant="outline"
         size="icon"
         aria-label="Mês anterior"
@@ -49,17 +51,17 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
         }}
       >
         <PopoverTrigger asChild>
-          <Button variant="ghost" className="min-w-40 font-medium first-letter:uppercase" aria-live="polite" aria-haspopup="dialog">
+          <Button type="button" variant="ghost" className="min-w-40 font-medium first-letter:uppercase" aria-live="polite" aria-haspopup="dialog">
             {formatMonth(value)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-64" aria-label="Escolher mês">
           <div className="mb-2 flex items-center justify-between">
-            <Button variant="ghost" size="icon-sm" aria-label="Ano anterior" disabled={year <= MIN_YEAR} onClick={() => setYear(year - 1)}>
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="Ano anterior" disabled={year <= MIN_YEAR} onClick={() => setYear(year - 1)}>
               <ChevronLeft aria-hidden />
             </Button>
             <span className="font-medium tabular-nums">{year}</span>
-            <Button variant="ghost" size="icon-sm" aria-label="Próximo ano" disabled={year >= MAX_YEAR} onClick={() => setYear(year + 1)}>
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="Próximo ano" disabled={year >= MAX_YEAR} onClick={() => setYear(year + 1)}>
               <ChevronRight aria-hidden />
             </Button>
           </div>
@@ -68,7 +70,7 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
               const month = `${year}-${String(index + 1).padStart(2, '0')}`
               const selected = month === value
               return (
-                <Button
+                <Button type="button"
                   key={label}
                   variant={selected ? 'default' : 'ghost'}
                   size="sm"
@@ -85,7 +87,7 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
           </div>
         </PopoverContent>
       </Popover>
-      <Button
+      <Button type="button"
         variant="outline"
         size="icon"
         aria-label="Próximo mês"
@@ -94,7 +96,7 @@ export function MonthPicker({ value, onChange }: MonthPickerProps) {
       >
         <ChevronRight aria-hidden />
       </Button>
-      <Button variant="ghost" size="sm" disabled={value === today} onClick={() => onChange(today)}>
+      <Button type="button" variant="ghost" size="sm" disabled={value === today} onClick={() => onChange(today)}>
         Mês atual
       </Button>
     </div>

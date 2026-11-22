@@ -7,16 +7,15 @@ import { toast } from 'sonner'
 
 import { ApiErrorAlert } from '@/components/shared/api-error-alert'
 import { MoneyInput } from '@/components/shared/money-input'
+import { PersonSplitFields } from '@/components/shared/person-split-fields'
 import { NativeSelect } from '@/components/shared/native-select'
 import { ResponsiveDialog, ResponsiveDialogFooter } from '@/components/shared/responsive-dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useCategories } from '@/features/categories/hooks'
-import { usePeople } from '@/features/people/hooks'
 import { errorMessages } from '@/lib/api'
 import { isValidIsoDate, todayIso } from '@/lib/date'
 import { formatCurrency, formatDate } from '@/lib/format'
@@ -25,9 +24,9 @@ import { currentMonth } from '@/lib/month'
 import type { RequestUpdateExpense, ResponseExpense } from '@/types/api'
 
 import { useCreateExpense, useUpdateExpense } from '../hooks'
-import { defaultFirstDueDate, expenseSummary, personShare, suggestedPaidCount } from '../preview'
+import { defaultFirstDueDate, expenseSummary, suggestedPaidCount } from '../preview'
 import { emptyExpenseForm, expenseSchema, expenseToForm, formToRequest, type ExpenseForm } from '../schemas'
-import { OptionGroup } from './option-group'
+import { OptionGroup } from '@/components/shared/option-group'
 
 export type ExpenseFormMode = { kind: 'create'; viewMonth: string | null } | { kind: 'edit'; expense: ResponseExpense }
 
@@ -97,6 +96,14 @@ function ExpenseFormBody({ mode, onDone }: { mode: ExpenseFormMode; onDone: () =
   })
 
   const noCategories = categories.isSuccess && categories.data.length === 0
+  const [watchedAmount] = useWatch({ control: form.control, name: ['amount'] })
+  const periodCount = isInstallment ? installmentsCount : 1
+  const periodCents =
+    watchedAmount > 0 && Number.isInteger(periodCount) && periodCount >= 1
+      ? isInstallment && amountType === 'Installment'
+        ? toCents(watchedAmount)
+        : Math.floor(toCents(watchedAmount) / periodCount)
+      : null
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
@@ -239,7 +246,14 @@ function ExpenseFormBody({ mode, onDone }: { mode: ExpenseFormMode; onDone: () =
           <FieldError errors={[errors.notes]} />
         </Field>
 
-        <PersonSection control={form.control} errors={errors} register={form.register} />
+        <PersonSplitFields
+          idPrefix="expense"
+          control={form.control}
+          register={form.register}
+          errors={errors}
+          periodCents={periodCents}
+          periodLabel="por parcela"
+        />
       </FieldGroup>
 
       <ExpenseSummary control={form.control} showPaid={!isEdit} />
@@ -293,107 +307,6 @@ function ExpenseSummary({ control, showPaid }: { control: Control<ExpenseForm>; 
       )}
       {showPaid && summary.paid > 0 && (
         <p className="text-muted-foreground">{`${summary.paid} ${summary.paid === 1 ? 'paga' : 'pagas'} · faltam ${summary.remaining}`}</p>
-      )}
-    </div>
-  )
-}
-
-type FormErrors = ReturnType<typeof useForm<ExpenseForm>>['formState']['errors']
-type FormRegister = ReturnType<typeof useForm<ExpenseForm>>['register']
-
-/** "Dividir com uma pessoa" (US6, FR-013). */
-function PersonSection({ control, errors, register }: { control: Control<ExpenseForm>; errors: FormErrors; register: FormRegister }) {
-  const people = usePeople()
-  const [split, personId, shareMode, percent, amount, amountType, isInstallment, installmentsCount] = useWatch({
-    control,
-    name: ['splitWithPerson', 'personId', 'shareMode', 'personPercent', 'amount', 'amountType', 'isInstallment', 'installmentsCount'],
-  })
-  const noPeople = people.isSuccess && people.data.length === 0
-
-  const person = people.data?.find((p) => p.id === personId)
-  const count = isInstallment ? installmentsCount : 1
-  const sharePercent = shareMode === 'full' ? 100 : percent
-  let shareText: string | null = null
-  if (person && amount > 0 && Number.isInteger(count) && count >= 1 && sharePercent && sharePercent >= 1 && sharePercent <= 100) {
-    const installmentCents =
-      isInstallment && amountType === 'Installment' ? toCents(amount) : Math.floor(toCents(amount) / count)
-    shareText = `Parte de ${person.name}: ${formatCurrency(fromCents(personShare(installmentCents, sharePercent)))} por parcela`
-  }
-
-  return (
-    <div className="space-y-3 rounded-lg border p-3">
-      <Controller
-        control={control}
-        name="splitWithPerson"
-        render={({ field }) => (
-          <Field orientation="horizontal">
-            <Switch id="expense-split" checked={field.value} disabled={noPeople} onCheckedChange={field.onChange} />
-            <FieldLabel htmlFor="expense-split" className="font-normal">
-              Dividir com uma pessoa
-            </FieldLabel>
-          </Field>
-        )}
-      />
-      {noPeople && <FieldDescription>Cadastre pessoas na área Pessoas para dividir despesas.</FieldDescription>}
-
-      {split && !noPeople && (
-        <div className="space-y-3">
-          <Controller
-            control={control}
-            name="personId"
-            render={({ field }) => (
-              <Field data-invalid={!!errors.personId}>
-                <FieldLabel htmlFor="expense-person">Pessoa</FieldLabel>
-                <NativeSelect
-                  id="expense-person"
-                  value={field.value ?? ''}
-                  aria-invalid={!!errors.personId}
-                  onChange={(event) => field.onChange(event.target.value ? Number(event.target.value) : null)}
-                >
-                  <option value="">Escolha...</option>
-                  {people.data?.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </NativeSelect>
-                <FieldError errors={[errors.personId]} />
-              </Field>
-            )}
-          />
-          <Controller
-            control={control}
-            name="shareMode"
-            render={({ field }) => (
-              <OptionGroup
-                name="expense-share"
-                legend="Parte da pessoa"
-                value={field.value}
-                options={[
-                  { value: 'full', label: 'Integral' },
-                  { value: 'percent', label: 'Percentual' },
-                ]}
-                onChange={field.onChange}
-              />
-            )}
-          />
-          {shareMode === 'percent' && (
-            <Field data-invalid={!!errors.personPercent}>
-              <FieldLabel htmlFor="expense-percent">Percentual (%)</FieldLabel>
-              <Input
-                id="expense-percent"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                max={100}
-                aria-invalid={!!errors.personPercent}
-                {...register('personPercent', { setValueAs: (value: string) => (value === '' ? null : Number(value)) })}
-              />
-              <FieldError errors={[errors.personPercent]} />
-            </Field>
-          )}
-          {shareText && <p className="text-sm text-muted-foreground">{shareText}</p>}
-        </div>
       )}
     </div>
   )

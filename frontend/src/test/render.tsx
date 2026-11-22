@@ -30,7 +30,7 @@ export function renderWithProviders(ui: ReactElement, { path = '/' }: { path?: s
 export async function renderApp(path = '/') {
   const result = renderWithProviders(<App />, { path })
   // Primeira importação de uma tela pode levar mais que o padrão de 1 s com os testes em paralelo.
-  await waitFor(() => expect(screen.queryByText('Carregando...')).not.toBeInTheDocument(), { timeout: 5000 })
+  await waitFor(() => expect(screen.queryByText('Carregando...')).not.toBeInTheDocument(), { timeout: 10000 })
   return result
 }
 

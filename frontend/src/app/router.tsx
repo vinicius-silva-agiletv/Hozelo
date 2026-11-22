@@ -13,13 +13,15 @@ const LoginPage = lazy(() => import('@/features/auth/pages/login-page').then((m)
 const RegisterPage = lazy(() => import('@/features/auth/pages/register-page').then((m) => ({ default: m.RegisterPage })))
 const SettingsPage = lazy(() => import('@/features/settings/pages/settings-page').then((m) => ({ default: m.SettingsPage })))
 const ExpensesPage = lazy(() => import('@/features/expenses/pages/expenses-page').then((m) => ({ default: m.ExpensesPage })))
+const IncomesPage = lazy(() => import('@/features/incomes/pages/incomes-page').then((m) => ({ default: m.IncomesPage })))
+const FixedBillsPage = lazy(() => import('@/features/fixed-bills/pages/fixed-bills-page').then((m) => ({ default: m.FixedBillsPage })))
 const UnderConstructionPage = lazy(() =>
   import('@/pages/under-construction-page').then((m) => ({ default: m.UnderConstructionPage })),
 )
 const NotFoundPage = lazy(() => import('@/pages/not-found-page').then((m) => ({ default: m.NotFoundPage })))
 
 /** Áreas que já têm tela própria (as demais mostram "em construção"). */
-const BUILT_AREAS = new Set(['settings', 'expenses'])
+const BUILT_AREAS = new Set(['settings', 'expenses', 'incomes', 'fixedBills'])
 
 /** Rotas do app (contracts/ui.md). */
 export function AppRoutes() {
@@ -45,6 +47,8 @@ export function AppRoutes() {
       >
         <Route path="/configuracoes" element={<SettingsPage />} />
         <Route path="/despesas" element={<ExpensesPage />} />
+        <Route path="/receitas" element={<IncomesPage />} />
+        <Route path="/contas-fixas" element={<FixedBillsPage />} />
         {navAreas
           .filter((area) => !BUILT_AREAS.has(area.key))
           .map((area) => (
