@@ -10,6 +10,9 @@ export const formatDate = (isoDate: string) => {
 }
 
 /** pluralize(0, 'lançamento', 'lançamentos', 'Nenhum lançamento') → "Nenhum lançamento"; 3 → "3 lançamentos" */
+/** Saldo de uma pessoa: positivo é dívida, negativo é crédito ("crédito de R$ 50,00"). */
+export const formatBalance = (value: number) => (value < 0 ? `crédito de ${currency.format(-value)}` : currency.format(value))
+
 export const pluralize = (count: number, singular: string, plural: string, zero?: string) => {
   if (count === 0 && zero !== undefined) return zero
   return `${count} ${count === 1 ? singular : plural}`

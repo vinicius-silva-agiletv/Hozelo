@@ -18,9 +18,9 @@ describe('navegação', () => {
     expect(links.map((l) => l.textContent)).toEqual(['Resumo do mês', 'Despesas', 'Receitas', 'Contas fixas', 'Pessoas', 'Configurações'])
     expect(within(sidebar).getByRole('link', { name: 'Receitas' })).toHaveAttribute('aria-current', 'page')
 
-    await userEvent.click(within(sidebar).getByRole('link', { name: 'Pessoas' }))
-    expect(await screen.findByRole('heading', { name: 'Pessoas' })).toBeInTheDocument()
-    expect(document.title).toBe('Pessoas · Hozelo')
+    await userEvent.click(within(sidebar).getByRole('link', { name: 'Resumo do mês' }))
+    expect(await screen.findByRole('heading', { name: 'Resumo do mês' })).toBeInTheDocument()
+    expect(document.title).toBe('Resumo do mês · Hozelo')
     expect(screen.getAllByText('Em construção').length).toBeGreaterThan(0)
   })
 

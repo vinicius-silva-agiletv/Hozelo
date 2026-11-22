@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query'
 
 import { useCategories } from '@/features/categories/hooks'
-import { queryKeys } from '@/lib/query-keys'
+import { peopleDependentKeys, queryKeys } from '@/lib/query-keys'
 import type {
   ExpenseStatus,
   RequestAmortizeExpense,
@@ -48,6 +48,7 @@ const refreshLists = (client: QueryClient) =>
     client.invalidateQueries({ queryKey: queryKeys.installments }),
     client.invalidateQueries({ queryKey: queryKeys.expenses }),
     client.invalidateQueries({ queryKey: queryKeys.summary }),
+    ...peopleDependentKeys.map((queryKey) => client.invalidateQueries({ queryKey })),
   ])
 
 const storeExpense = (client: QueryClient, expense: ResponseExpense) =>

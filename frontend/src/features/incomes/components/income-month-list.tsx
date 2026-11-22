@@ -196,13 +196,13 @@ function RecurrenceRow({
   )
 }
 
-/** Reembolso de pessoa: só leitura; tocar leva à área Pessoas (clarify Q1). */
+/** Reembolso de pessoa: só leitura; tocar abre a pessoa no mês do reembolso (clarify Q1 da 008, FR-010 da 009). */
 function ReimbursementRow({ item }: { item: ResponseLedgerItem }) {
   const navigate = useNavigate()
   return (
     <>
       <span className="size-5 shrink-0" aria-hidden />
-      <RowBody item={item} onOpen={() => navigate('/pessoas')} badge="reembolso" ariaLabel={`Reembolso de ${item.name}, ver em Pessoas`} />
+      <RowBody item={item} onOpen={() => navigate(`/pessoas/${item.sourceId}?mes=${item.month}`)} badge="reembolso" ariaLabel={`Abrir ${item.name} em Pessoas`} />
       <span className="size-9 shrink-0" aria-hidden />
     </>
   )
