@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { toast } from 'sonner'
 import { afterEach, vi } from 'vitest'
+
+// Telas carregadas sob demanda e testes em paralelo: dá mais folga às esperas (findBy/waitFor).
+configure({ asyncUtilTimeout: 3000 })
 
 afterEach(() => {
   cleanup()

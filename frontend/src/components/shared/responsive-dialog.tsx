@@ -13,20 +13,22 @@ interface ResponsiveDialogProps {
   title: string
   description?: ReactNode
   children: ReactNode
+  /** Mais largo no computador (ex.: detalhe com lista de parcelas). */
+  wide?: boolean
 }
 
 /**
  * Painel de formulário (research.md §4): diálogo centralizado a partir de 768 px e painel vindo de
  * baixo no celular. Feche-o pelo `onOpenChange` (Esc, clique fora ou botão "Cancelar" do formulário).
  */
-export function ResponsiveDialog({ open, onOpenChange, title, description, children }: ResponsiveDialogProps) {
+export function ResponsiveDialog({ open, onOpenChange, title, description, children, wide = false }: ResponsiveDialogProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
 
   if (isDesktop) {
     return (
       <DesktopContext.Provider value>
         <Dialog open={open} onOpenChange={onOpenChange}>
-          <DialogContent showCloseButton={false} className="sm:max-w-md">
+          <DialogContent showCloseButton={false} className={cn('max-h-[90dvh] overflow-y-auto', wide ? 'sm:max-w-2xl' : 'sm:max-w-md')}>
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
               {description ? <DialogDescription>{description}</DialogDescription> : <DialogDescription className="sr-only">{title}</DialogDescription>}

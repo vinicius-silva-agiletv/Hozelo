@@ -76,6 +76,17 @@ describe('MonthPicker', () => {
     expect(addMonths(currentMonth(), 0)).toBe(currentMonth())
   })
 
+  it('escolha direta: abre a grade, troca o ano e escolhe o mês', async () => {
+    render(<Harness initial="2026-11" />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'novembro de 2026' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Próximo ano' }))
+    await userEvent.click(screen.getByRole('button', { name: 'março de 2027' }))
+
+    expect(screen.getByRole('button', { name: 'março de 2027' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Próximo ano' })).not.toBeInTheDocument()
+  })
+
   it('respeita os limites 2000-01 e 2100-12', () => {
     const { unmount } = render(<Harness initial="2000-01" />)
     expect(screen.getByRole('button', { name: 'Mês anterior' })).toBeDisabled()
